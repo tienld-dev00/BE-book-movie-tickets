@@ -7,7 +7,7 @@ use App\Services\BaseService;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
-class GetUserService extends BaseService
+class SearchUserService extends BaseService
 {
     protected $userRepository;
 
@@ -18,11 +18,13 @@ class GetUserService extends BaseService
 
     public function handle()
     {
-        try {
-            $user = $this->userRepository->all();
-            return $user;
+        try
+        {
+            return $this->userRepository->search($this->data);
         } catch (Exception $e) {
             Log::info($e);
+
+            return false;
         }
     }
 }

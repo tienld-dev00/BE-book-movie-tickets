@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\User\UserController;
 use App\Http\Controllers\Payment\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,4 +30,13 @@ Route::middleware('auth:api')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('verify-email', [AuthController::class, 'verifyEmail'])->name('verify_email')->withoutMiddleware('auth:api');
     });
+});
+
+Route::group(['prefix' => 'users'], function () {
+    Route::post('create', [UserController::class, 'store']);
+    Route::get('index', [UserController::class, 'index']);
+    Route::get('show/{id}', [UserController::class, 'showUser']);
+    Route::get('check-login', [UserController::class, 'checkLogin'])->name('checklLogin');
+    Route::get('check-permission-fail-store', [UserController::class, 'checkPermissionFailStore'])->name('checkPermissionFailStore');
+    Route::post('update/{id}', [UserController::class, 'update']);
 });
