@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\User\LoginFacebookController;
+use App\Http\Controllers\Api\User\LoginGoogleController;
 use App\Http\Controllers\Api\User\UserController;
 use App\Http\Controllers\Payment\PaymentController;
 use Illuminate\Http\Request;
@@ -40,3 +42,11 @@ Route::group(['prefix' => 'users'], function () {
     Route::get('check-permission-fail-store', [UserController::class, 'checkPermissionFailStore'])->name('checkPermissionFailStore');
     Route::post('update/{id}', [UserController::class, 'update']);
 });
+
+// Google Sign In
+Route::get('google-sign-in-url', [LoginGoogleController::class, 'googleSignInUrl']);
+Route::get('google/callback', [LoginGoogleController::class, 'loginGoogleCallback']);
+
+// Login by facebook
+Route::get('facebook-sign-in-url', [LoginFacebookController::class, 'facebookSignInUrl']);
+Route::get('facebook/callback', [LoginFacebookController::class, 'loginFacebookCallback']);
