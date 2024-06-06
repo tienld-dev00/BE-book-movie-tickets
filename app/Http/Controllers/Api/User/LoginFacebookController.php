@@ -42,8 +42,6 @@ class LoginFacebookController extends Controller
             parse_str($state, $result);
             $facebookUser = Socialite::driver('facebook')->stateless()->user();
 
-            $email = $facebookUser->email ?? 'fb_' . $facebookUser->id . '@gmail.com';
-
             $user = User::where('email', $facebookUser->email)->first();
             if ($user) {
 
@@ -63,7 +61,7 @@ class LoginFacebookController extends Controller
             }
             $user = User::create(
                 [
-                    'email' => $email,
+                    'email' => $facebookUser->email,
                     'name' => $facebookUser->name,
                     'facebook_id' => $facebookUser->id,
                     'password' => Str::random(10),
