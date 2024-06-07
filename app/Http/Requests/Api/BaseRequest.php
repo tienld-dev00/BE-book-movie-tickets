@@ -23,8 +23,7 @@ class BaseRequest extends FormRequest
     /**
      * Handle a failed validation attempt
      *
-     * @param mixed $validator
-     * @return void
+     * @param  mixed  $validator
      *
      * @throws ValidationException
      */
