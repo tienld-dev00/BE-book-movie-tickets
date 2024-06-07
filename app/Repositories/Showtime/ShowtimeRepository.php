@@ -6,7 +6,7 @@ use App\Interfaces\Showtime\ShowtimeRepositoryInterface;
 use App\Models\Showtime;
 use App\Repositories\BaseRepository;
 use Carbon\Carbon;
-use App\Enums\Status;
+use App\Enums\ShowtimeStatus;
 
 class ShowtimeRepository extends BaseRepository implements ShowtimeRepositoryInterface
 {
@@ -27,7 +27,7 @@ class ShowtimeRepository extends BaseRepository implements ShowtimeRepositoryInt
         //today if showtime after now
         $allDay = $this->model
             ->where('movie_id', $movie_id)
-            ->where('status', Status::Show)
+            ->where('status', ShowtimeStatus::Show)
             ->where('start_time', '>', $now)
             ->selectRaw('DATE(start_time) AS date')
             ->distinct()
@@ -50,7 +50,7 @@ class ShowtimeRepository extends BaseRepository implements ShowtimeRepositoryInt
 
         $showtimes = $this->model->select('*')
             ->where('movie_id', $data['movie_id'])
-            ->where('status', Status::Show)
+            ->where('status', ShowtimeStatus::Show)
             ->whereDate('start_time', $data['date'])
             ->where('start_time', '>', $now)
             ->get();
@@ -68,7 +68,7 @@ class ShowtimeRepository extends BaseRepository implements ShowtimeRepositoryInt
     {
         $showtime = $this->model
             ->where('id', $showtime_id)
-            ->where('status', Status::Show)
+            ->where('status', ShowtimeStatus::Show)
             ->first();
 
         return $showtime;
