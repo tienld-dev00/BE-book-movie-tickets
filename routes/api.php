@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Categories\CategoriesController;
 use App\Http\Controllers\Api\User\LoginFacebookController;
 use App\Http\Controllers\Api\User\LoginGoogleController;
 use App\Http\Controllers\Api\User\UserController;
@@ -34,6 +35,8 @@ Route::middleware('auth:api')->group(function () {
     });
 });
 
+
+// CRUD user
 Route::group(['prefix' => 'users'], function () {
     Route::post('create', [UserController::class, 'store']);
     Route::get('index', [UserController::class, 'index']);
@@ -50,3 +53,12 @@ Route::get('google/callback', [LoginGoogleController::class, 'loginGoogleCallbac
 // Login by facebook
 Route::get('facebook-sign-in-url', [LoginFacebookController::class, 'facebookSignInUrl']);
 Route::get('facebook/callback', [LoginFacebookController::class, 'loginFacebookCallback']);
+
+
+Route::group(['prefix' => 'categories'], function () {
+    Route::post('create', [CategoriesController::class, 'store']);
+    Route::get('index', [CategoriesController::class, 'index']);
+    Route::get('show/{id}', [CategoriesController::class, 'showCategories']);
+    Route::post('update/{id}', [CategoriesController::class, 'update']);
+
+});
