@@ -29,8 +29,8 @@ class RegisterRequest extends BaseRequest
             'name' => [
                 'required',
                 'string',
-                'between:6,255'
-            ]
+                'between:6,255',
+            ],
         ];
     }
 }
