@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 class PaymentProcessorService extends BaseService
 {
     protected $paymentGateway;
+
     protected $updateUserService;
 
     public function __construct(PaymentProcessInterface $paymentGateway)

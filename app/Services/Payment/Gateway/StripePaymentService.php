@@ -11,7 +11,7 @@ class StripePaymentService implements PaymentProcessInterface
     public function payment(int $amount)
     {
         try {
-            dump('Stripe Payment' . $amount);
+            dump('Stripe Payment'.$amount);
         } catch (Exception $e) {
             Log::info($e);
 

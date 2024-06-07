@@ -11,7 +11,7 @@ class MomoPaymentService implements PaymentProcessInterface
     public function payment(int $amount)
     {
         try {
-            dump('MOMO Payment' . $amount);
+            dump('MOMO Payment'.$amount);
         } catch (Exception $e) {
             Log::info($e);
 

@@ -11,7 +11,7 @@ class FincodePaymentService implements PaymentProcessInterface
     public function payment(int $amount)
     {
         try {
-            dump('Fincode Payment' . $amount);
+            dump('Fincode Payment'.$amount);
         } catch (Exception $e) {
             Log::info($e);
 

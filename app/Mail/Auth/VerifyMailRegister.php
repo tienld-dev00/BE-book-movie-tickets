@@ -15,6 +15,7 @@ class VerifyMailRegister extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     protected $user;
+
     protected $url;
 
     /**
