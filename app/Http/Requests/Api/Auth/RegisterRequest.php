@@ -23,7 +23,7 @@ class RegisterRequest extends BaseRequest
                 'required',
                 'min:8',
                 'max:20',
-                'regex:/\s\s+/',
+                // 'regex:/\s\s+/',
                 'confirmed',
             ],
             'name' => [

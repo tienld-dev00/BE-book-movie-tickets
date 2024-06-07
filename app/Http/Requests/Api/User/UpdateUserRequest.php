@@ -26,7 +26,7 @@ class UpdateUserRequest extends BaseRequest
                 'between:6,255'
             ],
             'avatar' => [
-                'max:2048', // Giới hạn dung lượng ảnh
+                // 'max:2048', // Giới hạn dung lượng ảnh
             ],
             'role' => [
                 'integer'
