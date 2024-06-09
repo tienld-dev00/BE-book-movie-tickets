@@ -181,4 +181,12 @@ return [
 
     'attributes' => [],
 
+    /**
+     *  custom message rule
+     */
+
+    'seat_not_in_room' => 'The selected seat does not belong to the room of the given showtime.',
+    'seat_booked' => 'The seat is already booked for the selected showtime.',
+    'seat_not_in_firestore' => 'Seats invalid.',
+    'showtime_wrong_time' => 'The selected showtime must be in the future.'
 ];
