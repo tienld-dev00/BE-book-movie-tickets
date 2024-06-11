@@ -11,6 +11,7 @@ use App\Services\User\SearchUserService;
 use App\Services\User\ShowIdUserService;
 use App\Services\User\UpdateUserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -104,15 +105,5 @@ class UserController extends Controller
             'message' => __('users.update_success'),
             'data' => $data,
         ]);
-    }
-
-    public function checkLogin()
-    {
-        return $this->responseErrors(__('users.check_login_fail'));
-    }
-
-    public function checkPermissionFailStore()
-    {
-        return $this->responseErrors(__('users.check_permission_fail_user'));
     }
 }

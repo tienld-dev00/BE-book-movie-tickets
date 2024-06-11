@@ -9,7 +9,6 @@
         "barryvdh/laravel-ide-helper": "^2.15",
         "bensampo/laravel-enum": "^6.11",
         "doctrine/inflector": "^2.0",
-        "google/apiclient": "^2.16",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",

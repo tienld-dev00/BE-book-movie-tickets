@@ -34,10 +34,21 @@ class CreateRequest extends BaseRequest
 
             ],
             'role' => [
-
+                'integer'
             ],
             'status' => [
+                'integer'
+            ],
+            'google_id' => [
 
+            ],
+            'facebook_id' => [
+
+            ],
+            'phone_number' => [
+                'required',
+                'numeric',
+                'digits_between:9,11'
             ],
         ];
     }
