@@ -12,11 +12,6 @@ class Movie extends Model
 
     protected $table = 'movies';
 
-    protected $fillable = [
-        'id',
-        'name'
-    ];
-
     public function Showtime()
     {
         return $this->hasMany('App\Models\Showtime', 'movie_id');

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->dateTime('start_time');
             $table->dateTime('end_time');
-            $table->unsignedInteger('price');
+            $table->unsignedDecimal('price', 15, 2);
             $table->unsignedBigInteger('movie_id');
             $table->unsignedSmallInteger('room_id');
             $table->tinyInteger('status');

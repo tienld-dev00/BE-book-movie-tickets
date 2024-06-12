@@ -22,7 +22,7 @@ class AuthController extends Controller
     {
         $result = resolve(RegisterUserService::class)->setParams($request->validated())->handle();
 
-        if (! $result) {
+        if (!$result) {
             return $this->responseErrors('has an error when register user');
         }
 
@@ -40,7 +40,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request): Response
     {
         $credentials = $request->validated();
-        if (! $token = auth()->attempt($credentials)) {
+        if (!$token = auth()->attempt($credentials)) {
             return $this->responseErrors('Unauthorized', Response::HTTP_UNAUTHORIZED);
         }
 

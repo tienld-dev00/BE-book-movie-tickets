@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Movie\MovieController;
 use App\Http\Controllers\Api\Showtime\ShowtimeController;
 use App\Http\Controllers\Payment\PaymentController;
 use Illuminate\Http\Request;
@@ -29,6 +30,10 @@ Route::middleware('auth:api')->group(function () {
         Route::post('register', [AuthController::class, 'register'])->withoutMiddleware('auth:api');
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('verify-email', [AuthController::class, 'verifyEmail'])->name('verify_email')->withoutMiddleware('auth:api');
+    });
+
+    Route::group(['prefix' => 'movie'], function () {
+        Route::get('{slug}', [MovieController::class, 'showMovie'])->name('get_movie_detail');
     });
 
     Route::group(['prefix' => 'showtime'], function () {

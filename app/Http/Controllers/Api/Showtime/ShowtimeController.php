@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Showtime;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Showtime\FindShowTimeRequest;
 use App\Http\Resources\ShowDateResource;
+use App\Http\Resources\ShowtimeDetailResource;
 use App\Http\Resources\ShowtimeResource;
 use App\Services\Showtime\GetShowtimeService;
 use App\Services\Showtime\ShowDateService;
@@ -49,7 +50,7 @@ class ShowtimeController extends Controller
 
         return $this->responseSuccess([
             'message' => __('messages.success'),
-            'data' => $result,
+            'data' =>  ShowtimeResource::collection($result),
         ]);
     }
 
@@ -69,7 +70,7 @@ class ShowtimeController extends Controller
 
         return $this->responseSuccess([
             'message' => __('messages.success'),
-            'data' => new ShowtimeResource($result),
+            'data' => new ShowtimeDetailResource($result),
         ]);
     }
 }
