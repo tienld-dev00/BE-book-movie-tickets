@@ -23,14 +23,33 @@ class RegisterRequest extends BaseRequest
                 'required',
                 'min:8',
                 'max:20',
-                // 'regex:/\s\s+/',
                 'confirmed',
             ],
             'name' => [
                 'required',
                 'string',
                 'between:6,255'
-            ]
+            ],
+            'avatar' => [
+
+            ],
+            'role' => [
+                'integer'
+            ],
+            'status' => [
+                'integer'
+            ],
+            'google_id' => [
+
+            ],
+            'facebook_id' => [
+
+            ],
+            'phone_number' => [
+                'required',
+                'numeric',
+                'digits_between:9,11'
+            ],
         ];
     }
 }

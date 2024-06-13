@@ -31,34 +31,30 @@ Route::middleware('auth:api')->group(function () {
         Route::post('login', [AuthController::class, 'login'])->withoutMiddleware('auth:api');
         Route::post('register', [AuthController::class, 'register'])->withoutMiddleware('auth:api');
         Route::post('logout', [AuthController::class, 'logout']);
+        Route::get('profile', [AuthController::class, 'profile']);
         Route::post('verify-email', [AuthController::class, 'verifyEmail'])->name('verify_email')->withoutMiddleware('auth:api');
+    });
+
+    // CRUD user
+    Route::group(['prefix' => 'users'], function () {
+        Route::post('create', [UserController::class, 'store'])->middleware('role:admin');
+        Route::get('index', [UserController::class, 'index'])->middleware('role:admin');
+        Route::get('show/{id}', [UserController::class, 'showUser'])->middleware('role:user');
+        Route::post('update/{id}', [UserController::class, 'update'])->middleware('role:user');
+    });
+
+    Route::group(['prefix' => 'categories'], function () {
+        Route::post('create', [CategoriesController::class, 'store'])->middleware('role:admin');
+        Route::get('index', [CategoriesController::class, 'index'])->middleware('role:admin');
+        Route::get('show/{id}', [CategoriesController::class, 'showCategories'])->middleware('role:admin');
+        Route::post('update/{id}', [CategoriesController::class, 'update'])->middleware('role:admin');
     });
 });
 
-
-// CRUD user
-Route::group(['prefix' => 'users'], function () {
-    Route::post('create', [UserController::class, 'store']);
-    Route::get('index', [UserController::class, 'index']);
-    Route::get('show/{id}', [UserController::class, 'showUser']);
-    Route::get('check-login', [UserController::class, 'checkLogin'])->name('checklLogin');
-    Route::get('check-permission-fail-store', [UserController::class, 'checkPermissionFailStore'])->name('checkPermissionFailStore');
-    Route::post('update/{id}', [UserController::class, 'update']);
-});
-
 // Google Sign In
-Route::get('google-sign-in-url', [LoginGoogleController::class, 'googleSignInUrl']);
+Route::get('google', [LoginGoogleController::class, 'google']);
 Route::get('google/callback', [LoginGoogleController::class, 'loginGoogleCallback']);
 
 // Login by facebook
 Route::get('facebook-sign-in-url', [LoginFacebookController::class, 'facebookSignInUrl']);
 Route::get('facebook/callback', [LoginFacebookController::class, 'loginFacebookCallback']);
-
-
-Route::group(['prefix' => 'categories'], function () {
-    Route::post('create', [CategoriesController::class, 'store']);
-    Route::get('index', [CategoriesController::class, 'index']);
-    Route::get('show/{id}', [CategoriesController::class, 'showCategories']);
-    Route::post('update/{id}', [CategoriesController::class, 'update']);
-
-});

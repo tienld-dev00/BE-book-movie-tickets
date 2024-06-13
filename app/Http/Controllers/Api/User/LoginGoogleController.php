@@ -11,12 +11,12 @@ use Illuminate\Support\Str;
 
 class LoginGoogleController extends Controller
 {
-    public function googleSignInUrl()
+    public function google()
     {
         try {
             $url = Socialite::driver('google')->stateless()
                 ->redirect()->getTargetUrl();
-            return response()->json([
+            return $this->responseSuccess([
                 'url' => $url,
             ])->setStatusCode(Response::HTTP_OK);
         } catch (\Exception $exception) {
@@ -36,31 +36,30 @@ class LoginGoogleController extends Controller
             if ($user) {
 
                 $token = auth()->login($user);
+                // localStorage.setItem("token", accessToken);
+                session(['token' => $token]);
 
                 $user->update(['google_id' => $googleUser->id]);
+            } else {
+                $user = User::create(
+                    [
+                        'email' => $googleUser->email,
+                        'name' => $googleUser->name,
+                        'google_id' => $googleUser->id,
+                        'password' => Str::random(10),
+                    ]
+                );
 
-                return response()->json([
-                    'status' => __('users.google_sign_in_email_existed'),
-                    'data' => [
-                        'user' => $user,
-                        'access_token' => $token,
-                        'token_type' => 'bearer',
-                        'expires_in' => auth()->factory()->getTTL() * 60,
-                    ],
-                ], Response::HTTP_OK);
+                $token = auth()->login($user);
             }
-            $user = User::create(
-                [
-                    'email' => $googleUser->email,
-                    'name' => $googleUser->name,
-                    'google_id' => $googleUser->id,
-                    'password' => Str::random(10),
-                ]
-            );
 
-            $token = auth()->login($user);
-
-            return response()->json([
+            $queryParams = http_build_query([
+                'status' => __('users.login_google_success'),
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 60,
+            ]);
+            return $this->responseSuccess([
                 'status' => __('users.login_google_success'),
                 'data' => [
                     'user' => $user,
@@ -71,7 +70,7 @@ class LoginGoogleController extends Controller
             ], Response::HTTP_CREATED);
         } catch (\Exception $exception) {
 
-            return response()->json([
+            return $this->responseErrors([
                 'status' => __('users.login_google_failed'),
                 'error' => $exception,
                 'message' => $exception->getMessage()

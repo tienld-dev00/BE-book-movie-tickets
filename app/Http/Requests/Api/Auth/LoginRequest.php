@@ -17,7 +17,6 @@ class LoginRequest extends BaseRequest
             'email' => [
                 'required',
                 'email',
-                'exists:users,email',
             ],
             'password' => [
                 'required',

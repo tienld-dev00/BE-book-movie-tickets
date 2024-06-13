@@ -13,8 +13,9 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-
+    'password' => 'Incorrect password.',
+    'user_does_not_exist' => 'User does not exist.',
+    'your_account_is_locked' => 'Your account is locked.',
+    'register_success' => 'Register success.',
+    'register_fail' => 'User registration failed.'
 ];
