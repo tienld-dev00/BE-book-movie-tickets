@@ -4,24 +4,32 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Showtime extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    protected $table = 'showtimes';
+
+    public function Movie()
+    {
+        return $this->belongsTo('App\Models\Movie', 'movie_id');
+    }
+
+    public function Room()
+    {
+        return $this->belongsTo('App\Models\Room', 'room_id');
+    }
+
     protected $fillable = [
+        'id',
         'start_time',
         'end_time',
-        'price',
         'movie_id',
         'room_id',
+        'price',
         'status',
     ];
 
@@ -31,21 +39,5 @@ class Showtime extends Model
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
-    }
-
-    /**
-     * Get the movie for the showtime.
-     */
-    public function movie(): BelongsTo
-    {
-        return $this->BelongsTo(Movie::class);
-    }
-
-    /**
-     * Get the room for the showtime.
-     */
-    public function room(): BelongsTo
-    {
-        return $this->BelongsTo(Room::class);
     }
 }

@@ -4,35 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Room extends Model
 {
     use HasFactory, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    protected $table = 'rooms';
+
     protected $fillable = [
-        'name',
+        'id',
+        'name'
     ];
 
-    /**
-     * Get the showtimes for the room.
-     */
-    public function showtimes(): HasMany
+    public function Showtime()
     {
-        return $this->hasMany(Showtime::class);
+        return $this->hasMany('App\Models\Showtime', 'room_id');
     }
 
-    /**
-     * Get the seats for the room.
-     */
-    public function seats(): HasMany
+    public function Seat()
     {
-        return $this->hasMany(Seat::class);
+        return $this->hasMany('App\Models\Seat', 'room_id');
     }
 }

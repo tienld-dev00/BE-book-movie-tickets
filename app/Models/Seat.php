@@ -11,16 +11,18 @@ class Seat extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'seats';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
+        'id',
         'name',
-        'room_id',
+        'room_id'
     ];
+
+    public function Room()
+    {
+        return $this->belongsTo('App\Models\Room', 'room_id');
+    }
 
     /**
      * Get the tickets for the seat.

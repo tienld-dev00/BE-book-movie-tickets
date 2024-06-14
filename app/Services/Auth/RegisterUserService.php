@@ -26,7 +26,7 @@ class RegisterUserService extends CreateUserService
 
             return true;
         } catch (Exception $e) {
-            Log::error("register user fail", ['memo' => $e->getMessage()]);
+            Log::error('register user fail', ['memo' => $e->getMessage()]);
 
             return false;
         }

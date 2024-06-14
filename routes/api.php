@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\Webhook\StripeWebhookController;
 use App\Http\Controllers\Api\Admin\Order\OrderController as AdminOrderController;
 use App\Jobs\SendEmail\Order\SendMailOrderSuccessJob;
 use App\Models\Order;
+use App\Http\Controllers\Api\Movie\MovieController;
+use App\Http\Controllers\Api\Showtime\ShowtimeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +40,16 @@ Route::middleware('auth:api')->group(function () {
             Route::get('', [AdminOrderController::class, 'index']);
             Route::post('refund/{order}', [AdminOrderController::class, 'refund']);
         });
+    });
+
+    Route::group(['prefix' => 'movie'], function () {
+        Route::get('{slug}', [MovieController::class, 'showMovie'])->name('get_movie_detail');
+    });
+
+    Route::group(['prefix' => 'showtime'], function () {
+        Route::get('dates/{movie_id}', [ShowtimeController::class, 'getShowDate'])->name('get_show_date');
+        Route::get('/', [ShowtimeController::class, 'getShowtimesByDate'])->name('get_showtimes_by_date');
+        Route::get('{showtime_id}', [ShowtimeController::class, 'showShowtime'])->name('get_showtime');
     });
 
     Route::group(['prefix' => 'orders'], function () {

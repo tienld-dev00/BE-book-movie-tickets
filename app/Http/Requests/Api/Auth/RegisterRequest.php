@@ -23,13 +23,14 @@ class RegisterRequest extends BaseRequest
                 'required',
                 'min:8',
                 'max:20',
+                // 'regex:/\s\s+/',
                 'confirmed',
             ],
             'name' => [
                 'required',
                 'string',
-                'between:6,255'
-            ]
+                'between:6,255',
+            ],
         ];
     }
 }

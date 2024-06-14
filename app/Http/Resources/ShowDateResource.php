@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SeatResource extends JsonResource
+class ShowDateResource extends JsonResource
 {
     /**
      * Transform the resource collection into an array.
@@ -15,8 +16,8 @@ class SeatResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name
+            'date' => $this->resource,
+            'day_of_week' => Carbon::parse($this->resource)->dayOfWeek,
         ];
     }
 }

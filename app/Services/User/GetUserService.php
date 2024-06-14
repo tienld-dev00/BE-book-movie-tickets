@@ -20,6 +20,7 @@ class GetUserService extends BaseService
     {
         try {
             $this->userRepository->all();
+
             return true;
         } catch (Exception $e) {
             Log::info($e);

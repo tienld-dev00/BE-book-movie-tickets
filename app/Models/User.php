@@ -48,7 +48,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * Set password hashing algorithm attributes.
      *
-     * @param mixed $value
+     * @param  mixed  $value
      */
     public function setPasswordAttribute($value)
     {

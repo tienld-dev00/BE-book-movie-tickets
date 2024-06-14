@@ -34,7 +34,7 @@ class AuthController extends Controller
 
     /**
      * Get a JWT via given credentials.
-     * @param  LoginRequest $request
+     *
      * @return HttpResponse
      */
     public function login(LoginRequest $request): Response
@@ -63,7 +63,7 @@ class AuthController extends Controller
 
             return response()->json(['message' => 'User successfully signed out']);
         } catch (Exception $e) {
-            Log::error("logout fail", ['result' => $e->getMessage()]);
+            Log::error('logout fail', ['result' => $e->getMessage()]);
 
             return $this->responseErrors('has an error when register user');
         }
@@ -81,7 +81,7 @@ class AuthController extends Controller
 
             return response()->json(['message' => 'User successfully signed out']);
         } catch (Exception $e) {
-            Log::error("logout fail", ['result' => $e->getMessage()]);
+            Log::error('logout fail', ['result' => $e->getMessage()]);
 
             return $this->responseErrors('has an error when register user');
         }
