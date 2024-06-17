@@ -7,7 +7,7 @@ use App\Services\BaseService;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
-class GetMovieService extends BaseService
+class ShowMovieService extends BaseService
 {
     protected $movieRepository;
 
