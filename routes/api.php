@@ -5,8 +5,6 @@ use App\Http\Controllers\Api\Order\OrderController;
 use App\Http\Controllers\Api\Payment\PaymentController;
 use App\Http\Controllers\Api\Webhook\StripeWebhookController;
 use App\Http\Controllers\Api\Admin\Order\OrderController as AdminOrderController;
-use App\Jobs\SendEmail\Order\SendMailOrderSuccessJob;
-use App\Models\Order;
 use App\Http\Controllers\Api\Movie\MovieController;
 use App\Http\Controllers\Api\Showtime\ShowtimeController;
 use Illuminate\Http\Request;
@@ -53,7 +51,7 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::group(['prefix' => 'orders'], function () {
-        Route::post('', [OrderController::class, 'store']);
+        Route::get('', [OrderController::class, 'index']);
         Route::get('{order}', [OrderController::class, 'show']);
     });
 

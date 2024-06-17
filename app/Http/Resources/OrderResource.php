@@ -23,7 +23,7 @@ class OrderResource extends JsonResource
             'showtime' => new ShowtimeResource($this->showtime),
             'amount' => $this->getAmount(),
             'tickets' => TicketResource::collection($this->tickets),
-            'transaction_id' => isset($this->payments[0]->payment_intent_id) ? $this->payments[0]->payment_intent_id : '',
+            'payments' => PaymentResource::collection($this->payments),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];

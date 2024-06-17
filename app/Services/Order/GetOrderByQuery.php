@@ -22,11 +22,15 @@ class GetOrderByQuery extends BaseService
         try {
             $builder = Order::query();
 
+            if (isset($this->data['user_id'])) {
+                $this->orderRepository->applyFilter($builder, 'user_id', $this->data['user_id']);
+            }
+
             if (isset($this->data['keyword'])) {
                 $this->orderRepository->applySearch($builder, $this->data['keyword']);
             }
 
-            $builder->orderBy('updated_at', 'desc');
+            $this->orderRepository->applySort($builder, 'updated_at', 'desc');
 
             return $builder->paginate(6);
         } catch (Exception $e) {

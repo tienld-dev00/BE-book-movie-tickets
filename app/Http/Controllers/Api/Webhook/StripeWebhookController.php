@@ -116,7 +116,7 @@ class StripeWebhookController extends Controller
                 'payment_intent_id' => $paymentIntent->id,
                 'amount' => $paymentIntent->amount / 100,
                 'currency' => $paymentIntent->currency,
-                'status' => $paymentIntent->status,
+                'status' => 'payment succeeded',
                 'payment_method_id' => $paymentIntent->payment_method,
             ])
             ->handle();
@@ -227,7 +227,7 @@ class StripeWebhookController extends Controller
                 'payment_intent_id' => $paymentIntent->payment_intent,
                 'amount' => $paymentIntent->amount / 100,
                 'currency' => $paymentIntent->currency,
-                'status' => $paymentIntent->status,
+                'status' => 'refunded',
                 'payment_method_id' => $paymentIntent->payment_method,
             ])
             ->handle();
