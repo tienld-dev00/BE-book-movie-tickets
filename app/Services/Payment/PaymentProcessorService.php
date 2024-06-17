@@ -2,19 +2,16 @@
 
 namespace App\Services\Payment;
 
-use App\Interfaces\Payment\PaymentProcessInterface;
-use App\Services\BaseService;
-use App\Services\User\UpdateUserService;
-use Exception;
+use App\Interfaces\Payment\PaymentGatewayInterface;
 use Illuminate\Support\Facades\Log;
+use App\Services\BaseService;
+use Exception;
 
 class PaymentProcessorService extends BaseService
 {
     protected $paymentGateway;
 
-    protected $updateUserService;
-
-    public function __construct(PaymentProcessInterface $paymentGateway)
+    public function __construct(PaymentGatewayInterface $paymentGateway)
     {
         $this->paymentGateway = $paymentGateway;
     }
@@ -22,8 +19,7 @@ class PaymentProcessorService extends BaseService
     public function handle()
     {
         try {
-            $this->paymentGateway->payment($this->data->amount);
-            resolve(UpdateUserService::class)->setParams()->handle();
+            return $this->paymentGateway->processPayment($this->data);
         } catch (Exception $e) {
             Log::info($e);
 

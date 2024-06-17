@@ -13,15 +13,15 @@ use BenSampo\Enum\Enum;
  */
 final class MovieStatus extends Enum
 {
-    /**
-     * Status representing that the showtime is visible.
-     * @var int
-     */
-    const SHOW = 0;
+     /**
+      * Status representing that the showtime is visible.
+      * @var int
+      */
+     const SHOW = 0;
 
-    /**
-     * Status representing that the showtime is hidden.
-     * @var int
-     */
-    const HIDE = 1;
+     /**
+      * Status representing that the showtime is hidden.
+      * @var int
+      */
+     const HIDE = 1;
 }

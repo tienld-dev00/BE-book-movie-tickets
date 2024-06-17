@@ -16,13 +16,13 @@ class RegisterUserService extends CreateUserService
         try {
             $user = parent::handle();
 
-            $verificationUrl = URL::temporarySignedRoute(
-                'verify_email',
-                now()->addMinutes(60),
-                ['id' => $user->id]
-            );
+            // $verificationUrl = URL::temporarySignedRoute(
+            //     'verify_email',
+            //     now()->addMinutes(60),
+            //     ['id' => $user->id]
+            // );
 
-            Mail::to($user->email)->send(new VerifyMailRegister($user, $verificationUrl));
+            // Mail::to($user->email)->send(new VerifyMailRegister($user, $verificationUrl));
 
             return true;
         } catch (Exception $e) {

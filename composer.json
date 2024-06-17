@@ -9,11 +9,14 @@
         "barryvdh/laravel-ide-helper": "^2.15",
         "bensampo/laravel-enum": "^6.11",
         "doctrine/inflector": "^2.0",
+        "google/cloud-firestore": "^1.43",
         "guzzlehttp/guzzle": "^7.2",
+        "kreait/laravel-firebase": "^5.8",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "spatie/laravel-package-tools": "^1.16",
+        "stripe/stripe-php": "^10.21",
         "tymon/jwt-auth": "^2.1"
     },
     "require-dev": {

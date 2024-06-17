@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Seat extends Model
@@ -21,5 +22,13 @@ class Seat extends Model
     public function Room()
     {
         return $this->belongsTo('App\Models\Room', 'room_id');
+    }
+
+    /**
+     * Get the tickets for the seat.
+     */
+    public function tickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class);
     }
 }
