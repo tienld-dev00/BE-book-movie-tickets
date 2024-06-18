@@ -3,8 +3,10 @@
 namespace App\Http\Requests\Api\Auth;
 
 use App\Http\Requests\Api\BaseRequest;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
-class RegisterRequest extends BaseRequest
+class UpdateUserRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,22 +16,14 @@ class RegisterRequest extends BaseRequest
     public function rules()
     {
         return [
-            'email' => [
-                'required',
-                'email',
-                'unique:users,email',
-            ],
+
             'password' => [
-                'required',
                 'min:8',
                 'max:20',
-                // 'regex:/\s\s+/',
-                'confirmed',
             ],
             'name' => [
-                'required',
                 'string',
-                'between:6,255',
+                'between:6,255'
             ],
             'avatar' => [
 
@@ -43,8 +37,10 @@ class RegisterRequest extends BaseRequest
             'google_id' => [
 
             ],
+            'facebook_id' => [
+
+            ],
             'phone_number' => [
-                'required',
                 'numeric',
                 'digits_between:9,11'
             ],
