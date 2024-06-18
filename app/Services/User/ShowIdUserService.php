@@ -7,24 +7,23 @@ use App\Services\BaseService;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
-class UpdateUserService extends BaseService
+class ShowIdUserService extends BaseService
 {
-    protected $userRepository;
+    protected $toDoListRepository;
 
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(UserRepositoryInterface $toDoListRepository)
     {
-        $this->userRepository = $userRepository;
+        $this->toDoListRepository = $toDoListRepository;
     }
 
     public function handle()
     {
         try {
-            return $this->userRepository->update($this->data, $this->data['id']);
+            $user = $this->toDoListRepository->find($this->data);
 
+            return $user;
         } catch (Exception $e) {
             Log::info($e);
-
-            return false;
         }
     }
 }

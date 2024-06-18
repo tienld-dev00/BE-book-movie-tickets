@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\Webhook\StripeWebhookController;
 use App\Http\Controllers\Api\Admin\Order\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Movie\MovieController;
 use App\Http\Controllers\Api\Showtime\ShowtimeController;
+use App\Http\Controllers\Api\User\LoginGoogleController;
+use App\Http\Controllers\Api\User\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,13 +32,23 @@ Route::middleware('auth:api')->group(function () {
         Route::post('login', [AuthController::class, 'login'])->withoutMiddleware('auth:api');
         Route::post('register', [AuthController::class, 'register'])->withoutMiddleware('auth:api');
         Route::post('logout', [AuthController::class, 'logout']);
-        Route::post('verify-email', [AuthController::class, 'verifyEmail'])->name('verify_email')->withoutMiddleware('auth:api');
+        Route::get('profile', [AuthController::class, 'profile']);
+        Route::post('update', [AuthController::class, 'update']);
+        Route::post('change-password', [AuthController::class, 'changePassword']);
+        Route::get('verify-email', [AuthController::class, 'verifyEmail'])->name('verify_email')->withoutMiddleware('auth:api');
     });
 
     Route::group(['prefix' => 'admin'], function () {
         Route::group(['prefix' => 'orders'], function () {
             Route::get('', [AdminOrderController::class, 'index']);
             Route::post('refund/{order}', [AdminOrderController::class, 'refund']);
+        });
+
+        Route::group(['prefix' => 'users'], function () {
+            Route::post('create', [UserController::class, 'store'])->middleware('role:admin');
+            Route::get('index', [UserController::class, 'index'])->middleware('role:admin');
+            Route::get('show/{id}', [UserController::class, 'showUser'])->middleware('role:admin');
+            Route::post('update/{id}', [UserController::class, 'update'])->middleware('role:admin');
         });
     });
 
@@ -60,3 +72,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('handle-webhook', [StripeWebhookController::class, 'handleStripeWebhook'])->withoutMiddleware('auth:api');
     });
 });
+
+// Google Sign In
+Route::get('/google', [LoginGoogleController::class, 'google']);
+Route::get('/google/callback', [LoginGoogleController::class, 'loginGoogleCallback']);
