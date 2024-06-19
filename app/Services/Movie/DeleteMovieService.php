@@ -8,7 +8,7 @@ use App\Services\BaseService;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
-class GetMoviesService extends BaseService
+class DeleteMovieService extends BaseService
 {
     protected $movieRepository;
 
@@ -20,15 +20,7 @@ class GetMoviesService extends BaseService
     public function handle()
     {
         try {
-            $data = [
-                'key_word' => strip_tags($this->data['key_word']) ?? null,
-                'per_page' => $this->data['per_page'] ?? Paginate::DEFAULT,
-                'sort_field' => $this->data['sort_field'] ?? 'created_at',
-                'sort_direction' => $this->data['sort_direction'] ?? 'DESC'
-            ];
-            $movie =  $this->movieRepository->getListMovies($data);
-
-            return $movie;
+            return $this->movieRepository->delete($this->data);
         } catch (Exception $e) {
             Log::info($e);
 

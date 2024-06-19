@@ -11,7 +11,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class AddMovieService extends BaseService
+class CreateMovieService extends BaseService
 {
     protected $movieRepository;
 

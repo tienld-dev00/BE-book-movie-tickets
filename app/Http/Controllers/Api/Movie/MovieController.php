@@ -3,15 +3,22 @@
 namespace App\Http\Controllers\Api\Movie;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\GetListMovieRequest;
 use App\Http\Requests\Api\Movie\MovieRequest;
+use App\Http\Resources\MovieCollection;
+use App\Http\Resources\MovieResource;
+use App\Http\Resources\PaginationCollectionTrait;
 use App\Services\Movie\AddMovieService;
+use App\Services\Movie\CreateMovieService;
+use App\Services\Movie\DeleteMovieService;
 use App\Services\Movie\GetMoviesService;
+use App\Services\Movie\HideMovieService;
 use App\Services\Movie\ShowMovieService;
-use Illuminate\Http\Request as HttpRequest;
+use App\Services\Movie\UpdateMovieService;
+use Illuminate\Http\Request;
 
 class MovieController extends Controller
 {
+    use PaginationCollectionTrait;
     /**
      * show movie by id 
      *
@@ -28,7 +35,7 @@ class MovieController extends Controller
 
         return $this->responseSuccess([
             'message' => __('messages.success'),
-            'data' => $result,
+            'data' => new MovieResource($result),
         ]);
     }
 
@@ -38,10 +45,9 @@ class MovieController extends Controller
      * @param  int $slug
      * @return Response
      */
-    public function getListMovies(GetListMovieRequest $request)
+    public function getListMovies(Request $request)
     {
-        $data = $request->validated();
-        $result = resolve(GetMoviesService::class)->getListMovies($data)->handle();
+        $result = resolve(GetMoviesService::class)->setParams($request)->handle();
 
         if (!$result) {
             return $this->responseErrors(__('messages.error'));
@@ -49,7 +55,7 @@ class MovieController extends Controller
 
         return $this->responseSuccess([
             'message' => __('messages.success'),
-            'data' => $result,
+            'data' =>  new MovieCollection($result),
         ]);
     }
 
@@ -62,7 +68,7 @@ class MovieController extends Controller
     public function addMovie(MovieRequest $request)
     {
         $data = $request->validated();
-        $result = resolve(AddMovieService::class)->setParams($data)->handle();
+        $result = resolve(CreateMovieService::class)->setParams($data)->handle();
 
         if (!$result) {
             return $this->responseErrors(__('messages.error'));
@@ -70,7 +76,69 @@ class MovieController extends Controller
 
         return $this->responseSuccess([
             'message' => __('messages.success'),
-            'data' => $result,
+            'data' => new MovieResource($result),
+        ]);
+    }
+
+    /**
+     * Update movie with id
+     *
+     * @param MovieRequest $request
+     * @param int $movieId
+     * @return Response
+     */
+    public function updateMovie(MovieRequest $request, $movieId)
+    {
+        $data['information'] = $request->validated();
+        $data['id'] = $movieId;
+
+        $result = resolve(UpdateMovieService::class)->setParams($data)->handle();
+
+        if (!$result) {
+            return $this->responseErrors(__('messages.error'));
+        }
+
+        return $this->responseSuccess([
+            'message' => __('messages.success'),
+            'data' => new MovieResource($result),
+        ]);
+    }
+
+    /**
+     * delete Movie
+     *
+     * @param  int $movieId
+     * @return Response
+     */
+    public function deleteMovie($movieId)
+    {
+        $result = resolve(DeleteMovieService::class)->setParams($movieId)->handle();
+
+        if (!$result) {
+            return $this->responseErrors(__('messages.error'));
+        }
+
+        return $this->responseSuccess([
+            'message' => __('messages.success'),
+        ]);
+    }
+
+    /**
+     * update status Movie from show to hide
+     *
+     * @param  int $movieId
+     * @return Response
+     */
+    public function hideMovie($movieId)
+    {
+        $result = resolve(HideMovieService::class)->setParams($movieId)->handle();
+
+        if (!$result) {
+            return $this->responseErrors(__('messages.error'));
+        }
+
+        return $this->responseSuccess([
+            'message' => __('messages.success'),
         ]);
     }
 }

@@ -20,6 +20,7 @@ class Movie extends Model
         'age_limit',
         'duration',
         'description',
+        'status',
         'image',
         'trailer',
         'slug',
@@ -28,6 +29,11 @@ class Movie extends Model
     public function Showtime()
     {
         return $this->hasMany('App\Models\Showtime', 'movie_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo('App\Models\Category', 'category_id');
     }
 
     public function sluggable(): array

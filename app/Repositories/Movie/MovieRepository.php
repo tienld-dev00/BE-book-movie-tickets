@@ -2,10 +2,12 @@
 
 namespace App\Repositories\Movie;
 
+use App\Enums\MovieFilter;
 use App\Interfaces\Movie\MovieRepositoryInterface;
 use App\Models\Movie;
 use App\Repositories\BaseRepository;
 use App\Enums\MovieStatus;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class MovieRepository extends BaseRepository implements MovieRepositoryInterface
@@ -40,19 +42,19 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
     public function getListMovies($data)
     {
         $perPage = $data['per_page'];
-        $keyWord = $data['key_word'];
+        $keyWord = $data['key_word'] ?? null;
         $sortField = $data['sort_field'];
         $sortDirection = $data['sort_direction'];
 
         $query = $this->model
-            ->leftJoin('categories', 'movies.id_category', '=', 'categories.id')
-            ->leftJoin('showtime', 'movies.id', '=', 'showtime.movie_id')
+            ->leftJoin('categories', 'movies.category_id', '=', 'categories.id')
+            ->leftJoin('showtimes', 'movies.id', '=', 'showtimes.movie_id')
             ->leftJoin('orders', function ($join) {
-                $join->on('showtime.id', '=', 'orders.id_showtime')
+                $join->on('showtimes.id', '=', 'orders.showtime_id')
                     ->where('orders.status', true);
             })
-            ->select('movies.*', DB::raw('SUM(orders.quantity) as total_sales'))
-            ->groupBy('movies.id');
+            ->select('movies.*', 'categories.name as category_name', DB::raw('COUNT(orders.id) as total_orders'))
+            ->groupBy('movies.id', 'category_name');
 
         if ($keyWord) {
             $query->where(function ($query) use ($keyWord) {
@@ -60,10 +62,10 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
                     ->orWhere('movies.duration', 'LIKE', '%' . $keyWord . '%')
                     ->orWhere('movies.release_date', 'LIKE', '%' . $keyWord . '%')
                     ->orWhere('movies.age_limit', 'LIKE', '%' . $keyWord . '%')
-                    ->orWhere('categories.name', 'LIKE', '%' . $keyWord . '%')
-                    ->orWhere('total_sales', 'LIKE', '%' . $keyWord . '%');
+                    ->orWhere('categories.name', 'LIKE', '%' . $keyWord . '%');
             });
         }
+
         $query->orderBy($sortField, $sortDirection);
 
         return $query->paginate($perPage);
