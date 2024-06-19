@@ -41,7 +41,8 @@ class UpdateUserRequest extends BaseRequest
 
             ],
             'phone_number' => [
-                'numeric',
+                'nullable',
+                'string',
                 'digits_between:9,11'
             ],
         ];

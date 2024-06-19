@@ -214,13 +214,6 @@ class AuthController extends Controller
     {
         $user = Auth::user();
 
-        // Check if user is logged in via Google and does not have a password
-        if ($user->google_id && is_null($user->password)) {
-            return $this->responseErrors([
-                'message' => __('auth.cannot_change_password_google_user')
-            ], 400);
-        }
-
         // If user has a password, check the old password
         if (!is_null($user->password) && !Hash::check($request->old_password, $user->password)) {
             return $this->responseErrors([
@@ -236,6 +229,7 @@ class AuthController extends Controller
             'message' => __('auth.password_changed_success')
         ], 200);
     }
+
 
     /**
      * Log the user out (Invalidate the token).
