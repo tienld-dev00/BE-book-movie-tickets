@@ -51,6 +51,13 @@ Route::middleware('auth:api')->group(function () {
             Route::get('show/{id}', [UserController::class, 'showUser'])->middleware('role:admin');
             Route::post('update/{id}', [UserController::class, 'update'])->middleware('role:admin');
         });
+
+        Route::group(['prefix' => 'categories'], function () {
+            Route::post('create', [CategoriesController::class, 'store'])->middleware('role:admin');
+            Route::get('index', [CategoriesController::class, 'index'])->middleware('role:admin');
+            Route::get('show/{id}', [CategoriesController::class, 'showCategories'])->middleware('role:admin');
+            Route::post('update/{id}', [CategoriesController::class, 'update'])->middleware('role:admin');
+        });
     });
 
     Route::group(['prefix' => 'movie'], function () {
