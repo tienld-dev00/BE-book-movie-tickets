@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Order\OrderController;
 use App\Http\Controllers\Api\Payment\PaymentController;
 use App\Http\Controllers\Api\Webhook\StripeWebhookController;
 use App\Http\Controllers\Api\Admin\Order\OrderController as AdminOrderController;
+use App\Http\Controllers\Api\Categories\CategoriesController;
 use App\Http\Controllers\Api\Movie\MovieController;
 use App\Http\Controllers\Api\Showtime\ShowtimeController;
 use App\Http\Controllers\Api\User\LoginGoogleController;
