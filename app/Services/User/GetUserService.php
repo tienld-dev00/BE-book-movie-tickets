@@ -2,6 +2,7 @@
 
 namespace App\Services\User;
 
+use App\Enums\UserRole;
 use App\Interfaces\User\UserRepositoryInterface;
 use App\Services\BaseService;
 use Exception;
@@ -19,7 +20,7 @@ class GetUserService extends BaseService
     public function handle()
     {
         try {
-            $user = $this->userRepository->all();
+            $user = $this->userRepository->searchByRole(UserRole::USER);
             return $user;
         } catch (Exception $e) {
             Log::info($e);

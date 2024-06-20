@@ -29,4 +29,8 @@ return [
     'email_linked_to_google' => 'This email is logged in with a google account, click Continue with Google to log in.',
     'email_not_verified_check_email' => 'Account has not been verified. Please check your email for confirmation.',
     'verification_email_resent' => 'The email verification link has expired. A new verification email has been sent.',
+    'password_change_code' => 'Password change code has been sent. Please check your email.',
+    'password_reset_email_sent' => 'The previous password change code has been sent and is still valid. Please check your email again.',
+    'invalid_or_expired_code' => 'Invalid or expired code.',
+    'password_reset_limit_exceeded' => 'Password reset limit exceeded.'
 ];
