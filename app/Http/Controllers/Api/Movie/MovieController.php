@@ -7,7 +7,7 @@ use App\Http\Requests\Api\Movie\MovieRequest;
 use App\Http\Resources\MovieCollection;
 use App\Http\Resources\MovieResource;
 use App\Http\Resources\PaginationCollectionTrait;
-use App\Services\Movie\AddMovieService;
+use App\Services\Movie\ChangeStatusMovieService;
 use App\Services\Movie\CreateMovieService;
 use App\Services\Movie\DeleteMovieService;
 use App\Services\Movie\GetMoviesService;
@@ -124,14 +124,14 @@ class MovieController extends Controller
     }
 
     /**
-     * update status Movie from show to hide
+     * update status Movie show/hide
      *
      * @param  int $movieId
      * @return Response
      */
-    public function hideMovie($movieId)
+    public function changeStatusMovie($movieId)
     {
-        $result = resolve(HideMovieService::class)->setParams($movieId)->handle();
+        $result = resolve(ChangeStatusMovieService::class)->setParams($movieId)->handle();
 
         if (!$result) {
             return $this->responseErrors(__('messages.error'));
