@@ -7,9 +7,12 @@ use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Auth\ChangePasswordRequest;
+use App\Http\Requests\Api\Auth\checkForgotPasswordRequest;
 use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Http\Requests\Api\Auth\RegisterRequest;
+use App\Http\Requests\Api\Auth\ResetPasswordRequest;
 use App\Http\Requests\Api\Auth\UpdateUserRequest;
+use App\Mail\Auth\ForgotPassword;
 use App\Models\User;
 use App\Services\Auth\RegisterUserService;
 use Exception;
@@ -22,6 +25,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Auth\VerifyMailRegister;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -293,5 +298,117 @@ class AuthController extends Controller
 
             return $this->responseErrors('Has an error when verifying email');
         }
+    }
+
+
+    /**
+     * Send password change code.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
+    public function checkForgotPassword(checkForgotPasswordRequest $request)
+    {
+        // Retrieve validated email
+        $validatedData = $request->validated();
+
+        // Check if the email account exists
+        $user = User::where('email', $validatedData['email'])->first();
+
+        if (!$user) {
+            // If the user does not exist
+            return $this->responseErrors(
+                __('auth.user_does_not_exist'),
+                Response::HTTP_UNAUTHORIZED
+            );
+        }
+
+        // Lấy thông tin reset password của user từ bảng password_resets
+        $passwordReset = DB::table('password_resets')->where('email', $user->email)->first();
+
+        // Kiểm tra logic về số lần gửi mã và thời gian
+        if ($passwordReset) {
+            $createdAt = \Carbon\Carbon::parse($passwordReset->created_at);
+            $currentTime = \Carbon\Carbon::now();
+            $diffInMinutes = $currentTime->diffInMinutes($createdAt);
+
+            // Nếu số lần gửi mã nhiều hơn 3 và thời gian chưa quá 60 phút
+            if ($passwordReset->count >= 3 && $diffInMinutes < EmailAuthenticationTime::TIME) {
+                return $this->responseErrors(
+                    __('auth.password_reset_limit_exceeded'),
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            // Nếu thời gian đã quá 60 phút, reset lại bộ đếm
+            if ($diffInMinutes >= EmailAuthenticationTime::TIME) {
+                $count = 1; // reset count về 1 vì sẽ gửi mã mới
+            } else {
+                $count = $passwordReset->count + 1; // tăng count
+            }
+        } else {
+            // Nếu không có bản ghi nào, khởi tạo count là 1
+            $count = 1;
+        }
+
+        // Generate a 6-digit verification code (or token)
+        $verificationCode = mt_rand(100000, 999999);
+
+        // Store the verification code and creation time in password_resets table
+        DB::table('password_resets')->updateOrInsert(
+            ['email' => $user->email],
+            [
+                'token' => $verificationCode,
+                'created_at' => now(),
+                'count' => $count
+            ]
+        );
+
+        // Send the verification code via email
+        Mail::to($user->email)->send(new ForgotPassword($user, $verificationCode));
+
+        return response()->json(['message' => __('auth.password_change_code')]);
+    }
+
+
+    /**
+     * reset password.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+
+        $request->validated();
+
+        // Retrieve password reset record by verification code
+        $resetRecord = DB::table('password_resets')
+            ->where('token', $request->verification_code)
+            ->first();
+
+        if (!$resetRecord || Carbon::parse($resetRecord->created_at)->addMinutes(EmailAuthenticationTime::TIME)->isPast()) {
+            return $this->responseErrors(
+                __('auth.invalid_or_expired_code'),
+                Response::HTTP_UNAUTHORIZED
+            );
+        }
+
+        // Update user's password
+        $user = User::where('email', $resetRecord->email)->first();
+        if (!$user) {
+            return $this->responseErrors(
+                __('auth.user_does_not_exist'),
+                Response::HTTP_UNAUTHORIZED
+            );
+        }
+
+        $user->password = $request->password;
+        $user->save();
+
+        // Delete the password reset record after successful password change
+        DB::table('password_resets')->where('email', $resetRecord->email)->delete();
+
+        return response()->json(['message' => __('auth.password_changed_success')]);
     }
 }

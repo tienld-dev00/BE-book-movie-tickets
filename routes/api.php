@@ -36,6 +36,8 @@ Route::middleware('auth:api')->group(function () {
         Route::get('profile', [AuthController::class, 'profile']);
         Route::post('update', [AuthController::class, 'update']);
         Route::post('change-password', [AuthController::class, 'changePassword']);
+        Route::post('check-forgot-password', [AuthController::class, 'checkForgotPassword'])->withoutMiddleware('auth:api');
+        Route::post('resetPassword', [AuthController::class, 'resetPassword'])->withoutMiddleware('auth:api');
         Route::get('verify-email', [AuthController::class, 'verifyEmail'])->name('verify_email')->withoutMiddleware('auth:api');
     });
 
