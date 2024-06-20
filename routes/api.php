@@ -61,7 +61,12 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::group(['prefix' => 'movie'], function () {
+        Route::post('', [MovieController::class, 'addMovie'])->name('add_movie');
         Route::get('{slug}', [MovieController::class, 'showMovie'])->name('get_movie_detail');
+        Route::get('', [MovieController::class, 'getListMovies'])->name('get_list_movie');
+        Route::put('{id}', [MovieController::class, 'updateMovie'])->name('update_movie');
+        Route::delete('{id}', [MovieController::class, 'deleteMovie'])->name('delete_movie');
+        Route::get('change-status/{id}', [MovieController::class, 'changeStatusMovie'])->name('hide_movie');
     });
 
     Route::group(['prefix' => 'showtime'], function () {

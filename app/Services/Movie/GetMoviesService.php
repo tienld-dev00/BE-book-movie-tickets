@@ -2,12 +2,13 @@
 
 namespace App\Services\Movie;
 
+use App\Enums\Paginate;
 use App\Interfaces\Movie\MovieRepositoryInterface;
 use App\Services\BaseService;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
-class GetMovieService extends BaseService
+class GetMoviesService extends BaseService
 {
     protected $movieRepository;
 
@@ -19,7 +20,13 @@ class GetMovieService extends BaseService
     public function handle()
     {
         try {
-            $movie =  $this->movieRepository->getMovie($this->data);
+            $data = [
+                'key_word' => strip_tags($this->data['key_word']) ?? null,
+                'per_page' => $this->data['per_page'] ?? Paginate::DEFAULT,
+                'sort_field' => $this->data['sort_field'] ?? 'created_at',
+                'sort_direction' => $this->data['sort_direction'] ?? 'DESC'
+            ];
+            $movie =  $this->movieRepository->getListMovies($data);
 
             return $movie;
         } catch (Exception $e) {

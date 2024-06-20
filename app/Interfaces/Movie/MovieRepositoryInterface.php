@@ -13,4 +13,12 @@ interface MovieRepositoryInterface extends CrudRepositoryInterface
      * @return Resource
      */
     public function getMovie($slug);
+
+    /**
+     * get list movies 
+     *
+     * @param  array $data
+     * @return ResourceCollection
+     */
+    public function getListMovies($data);
 }
