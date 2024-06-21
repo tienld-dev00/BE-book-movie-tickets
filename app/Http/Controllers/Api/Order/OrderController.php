@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Order\GetOrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
-use App\Services\Order\GetOrderByQuery;
+use App\Services\Order\GetOrderByQueryService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
 
@@ -19,12 +19,21 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $result = resolve(GetOrderByQuery::class)->setParams(['user_id' => Auth::id()])->handle();
+        $result = resolve(GetOrderByQueryService::class)->setParams(['user_id' => Auth::id()])->handle();
 
         if ($result) {
             return $this->responseSuccess([
                 'message' => __('messages.get_success'),
-                'data' => $result
+                'data' => OrderResource::collection($result),
+                'meta' => [
+                    'current_page' => $result->currentPage(),
+                    'from' => $result->firstItem(),
+                    'last_page' => $result->lastPage(),
+                    'path' => $result->path(),
+                    'per_page' => $result->perPage(),
+                    'to' => $result->lastItem(),
+                    'total' => $result->total(),
+                ],
             ]);
         }
 

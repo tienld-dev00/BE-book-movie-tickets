@@ -54,6 +54,7 @@ Route::middleware('auth:api')->group(function () {
             Route::post('', [AdminRoomController::class, 'store']);
             Route::put('{room_id}', [AdminRoomController::class, 'update']);
             Route::delete('{room_id}', [AdminRoomController::class, 'delete']);
+        });
 
         Route::group(['prefix' => 'users'], function () {
             Route::post('create', [UserController::class, 'store'])->middleware('role:admin');
