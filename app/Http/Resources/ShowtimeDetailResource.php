@@ -22,7 +22,7 @@ class ShowtimeDetailResource extends JsonResource
             'movie' => $this->movie,
             'room' => $this->room->name,
             'created_at' => $this->created_at,
-            'updated_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
             'seats' => $this->room->seat ?
                 SeatResource::collection($this->room->seat)
                 : [],

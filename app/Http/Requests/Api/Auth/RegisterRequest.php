@@ -31,6 +31,23 @@ class RegisterRequest extends BaseRequest
                 'string',
                 'between:6,255',
             ],
+            'avatar' => [
+
+            ],
+            'role' => [
+                'integer'
+            ],
+            'status' => [
+                'integer'
+            ],
+            'google_id' => [
+
+            ],
+            'phone_number' => [
+                'required',
+                'numeric',
+                'digits_between:9,11'
+            ],
         ];
     }
 }

@@ -17,4 +17,18 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         return $this->model->where('email', $email)->first();
     }
+
+    public function searchByRole($role, $valueSearch = null)
+    {
+        $query = $this->model->where('role', $role);
+
+        if ($valueSearch) {
+            $query->where(function ($q) use ($valueSearch) {
+                $q->where('name', 'like', $valueSearch)
+                  ->orWhere('email', 'like', $valueSearch);
+            });
+        }
+
+        return $query->get();
+    }
 }
