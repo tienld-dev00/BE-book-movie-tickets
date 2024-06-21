@@ -19,6 +19,7 @@ class ShowtimeResource extends JsonResource
             'start_time' => $this->start_time,
             'end_time' => $this->end_time,
             'movie' => $this->movie->name,
+            'movie_image' => $this->movie->image,
             'room' => $this->room->name,
             'created_at' => $this->created_at,
             'updated_at' => $this->created_at,

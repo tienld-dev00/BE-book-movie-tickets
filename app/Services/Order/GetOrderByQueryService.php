@@ -8,7 +8,7 @@ use App\Services\BaseService;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
-class GetOrderByQuery extends BaseService
+class GetOrderByQueryService extends BaseService
 {
     protected $orderRepository;
 

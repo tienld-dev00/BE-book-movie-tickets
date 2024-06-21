@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Admin\Order;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
-use App\Services\Order\GetOrderByQuery;
+use App\Services\Order\GetOrderByQueryService;
 use App\Services\Payment\Gateway\StripePaymentService;
 use App\Services\Payment\RefundPaymentService;
 use Illuminate\Http\Request;
@@ -22,7 +22,8 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $query = $request->query();
-        $result = resolve(GetOrderByQuery::class)->setParams($query)->handle();
+        $result = resolve(GetOrderByQueryService::class)->setParams($query)->handle();
+
         if ($result) {
             return $this->responseSuccess([
                 'message' => __('messages.get_success'),
@@ -39,7 +40,7 @@ class OrderController extends Controller
             ]);
         }
 
-        return $this->responseSuccess(__('messages.get_fail'));
+        return $this->responseErrors(__('messages.get_fail'));
     }
 
     /**
