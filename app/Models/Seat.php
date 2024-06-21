@@ -14,7 +14,6 @@ class Seat extends Model
     protected $table = 'seats';
 
     protected $fillable = [
-        'id',
         'name',
         'room_id'
     ];
