@@ -39,6 +39,8 @@ Route::middleware('auth:api')->group(function () {
         Route::post('check-forgot-password', [AuthController::class, 'checkForgotPassword'])->withoutMiddleware('auth:api');
         Route::post('resetPassword', [AuthController::class, 'resetPassword'])->withoutMiddleware('auth:api');
         Route::get('verify-email', [AuthController::class, 'verifyEmail'])->name('verify_email')->withoutMiddleware('auth:api');
+        Route::post('/resend-activation-email', [AuthController::class, 'resendActivationEmail'])->name('resendActivationEmail')->withoutMiddleware('auth:api');
+
     });
 
     Route::group(['prefix' => 'admin'], function () {
