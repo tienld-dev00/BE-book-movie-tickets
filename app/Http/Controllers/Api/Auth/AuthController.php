@@ -113,29 +113,10 @@ class AuthController extends Controller
         if (!$user->google_id) {
             // Check email verification based on user role
             if ($user->role == UserRole::USER && is_null($user->email_verified_at)) {
-                // Check if the previous verification link has expired
-                $expiryTime = now()->subMinutes(EmailAuthenticationTime::TIME);
-                if ($user->created_at->lessThan($expiryTime)) {
-                    // If the verification link has expired, send a new verification email
-                    $verificationUrl = URL::temporarySignedRoute(
-                        'verify_email',
-                        now()->addMinutes(EmailAuthenticationTime::TIME),
-                        ['id' => $user->id]
-                    );
-
-                    Mail::to($user->email)->send(new VerifyMailRegister($user, $verificationUrl));
-
-                    return $this->responseErrors(
-                        __('auth.verification_email_resent'),
-                        Response::HTTP_UNAUTHORIZED
-                    );
-                } else {
-                    // If the verification link is still valid, notify the user to check their email
-                    return $this->responseErrors(
-                        __('auth.email_not_verified_check_email'),
-                        Response::HTTP_UNAUTHORIZED
-                    );
-                }
+                return $this->responseErrors(
+                    __('auth.email_not_verified'),
+                    Response::HTTP_UNAUTHORIZED
+                );
             }
         }
 
@@ -262,20 +243,22 @@ class AuthController extends Controller
      */
     public function verifyEmail(Request $request)
     {
-        Log::info($request);
         try {
             $user = User::find($request->id);
 
             if (!$user) {
-                return $this->responseErrors('User not found');
+                return $this->responseErrors([
+                    'success' => false,
+                    'message' => 'User not found'
+                ], 404);
             }
 
             // Check if email has been verified
             if ($user->email_verified_at !== null) {
-                // return redirect()->to('http://localhost:8080/confirmed-account')->with('message', 'Email has been verified');
                 return $this->responseSuccess([
+                    'success' => true,
                     'message' => 'Email has been verified',
-                ], 200);
+                ]);
             }
 
             // Get the expiration time from the request
@@ -283,23 +266,51 @@ class AuthController extends Controller
 
             // Check if the verification link has expired
             if (now()->timestamp > $expires) {
-                return $this->responseErrors('Email verification link has expired');
+                return $this->responseErrors([
+                    'success' => false,
+                    'message' => 'Email verification link has expired'
+                ]);
             }
 
             $user->email_verified_at = now();
             $user->update();
 
-            // return redirect()->to('http://localhost:8080/confirmed-account')->with('message', 'Email successfully verified');
             return $this->responseSuccess([
+                'success' => true,
                 'message' => 'Email successfully verified',
             ], 200);
         } catch (Exception $e) {
             Log::error("Email verification failed", ['result' => $e->getMessage()]);
 
-            return $this->responseErrors('Has an error when verifying email');
+            return $this->responseErrors([
+                'success' => false,
+                'message' => 'An error occurred when verifying email'
+            ], 500);
         }
     }
 
+    public function resendActivationEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        if ($user->email_verified_at) {
+            return response()->json(['message' => 'Email already verified'], 400);
+        }
+
+        $urlVerify = 'http://localhost:3000/confirmed-account?expired=' . now()->addMinutes(EmailAuthenticationTime::TIME)->timestamp . '&user_id=' . $user->id;
+
+        Mail::to($user->email)->send(new VerifyMailRegister($user, $urlVerify));
+
+        return response()->json(['message' => 'Activation email sent successfully']);
+    }
 
     /**
      * Send password change code.
