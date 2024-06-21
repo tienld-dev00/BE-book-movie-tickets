@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\Room\RoomController as AdminRoomController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Order\OrderController;
 use App\Http\Controllers\Api\Payment\PaymentController;
@@ -37,6 +38,14 @@ Route::middleware('auth:api')->group(function () {
         Route::group(['prefix' => 'orders'], function () {
             Route::get('', [AdminOrderController::class, 'index']);
             Route::post('refund/{order}', [AdminOrderController::class, 'refund']);
+        });
+
+        Route::group(['prefix' => 'rooms'], function () {
+            Route::get('', [AdminRoomController::class, 'index']);
+            Route::get('{room}', [AdminRoomController::class, 'show']);
+            Route::post('', [AdminRoomController::class, 'store']);
+            Route::put('{room_id}', [AdminRoomController::class, 'update']);
+            Route::delete('{room_id}', [AdminRoomController::class, 'delete']);
         });
     });
 

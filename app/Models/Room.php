@@ -14,7 +14,9 @@ class Room extends Model
 
     protected $fillable = [
         'id',
-        'name'
+        'name',
+        'row_number',
+        'column_number'
     ];
 
     public function Showtime()
@@ -25,5 +27,13 @@ class Room extends Model
     public function Seat()
     {
         return $this->hasMany('App\Models\Seat', 'room_id');
+    }
+
+    /**
+     * Get the seats for room.
+     */
+    public function seats()
+    {
+        return $this->hasMany(Seat::class);
     }
 }

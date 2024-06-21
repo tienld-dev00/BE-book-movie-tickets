@@ -4,12 +4,16 @@ namespace App\Providers;
 
 use App\Interfaces\Email\EmailServiceInterface;
 use App\Interfaces\Movie\MovieRepositoryInterface;
+use App\Interfaces\Room\RoomRepositoryInterface;
+use App\Interfaces\Seat\SeatRepositoryInterface;
 use App\Interfaces\Showtime\ShowtimeRepositoryInterface;
 use App\Interfaces\Order\OrderRepositoryInterface;
 use App\Interfaces\Payment\PaymentRepositoryInterface;
 use App\Interfaces\Ticket\TicketRepositoryInterface;
 use App\Interfaces\User\UserRepositoryInterface;
 use App\Repositories\Movie\MovieRepository;
+use App\Repositories\Room\RoomRepository;
+use App\Repositories\Seat\SeatRepository;
 use App\Repositories\Showtime\ShowtimeRepository;
 use App\Repositories\Order\OrderRepository;
 use App\Repositories\Payment\PaymentRepository;
@@ -35,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(EmailServiceInterface::class, EmailService::class);
         $this->app->bind(ShowtimeRepositoryInterface::class, ShowtimeRepository::class);
         $this->app->bind(MovieRepositoryInterface::class, MovieRepository::class);
+        $this->app->bind(SeatRepositoryInterface::class, SeatRepository::class);
+        $this->app->bind(RoomRepositoryInterface::class, RoomRepository::class);
     }
 
     /**
