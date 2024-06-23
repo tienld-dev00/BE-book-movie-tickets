@@ -102,3 +102,9 @@ Route::middleware('auth:api')->group(function () {
 // Google Sign In
 Route::get('/google', [LoginGoogleController::class, 'google']);
 Route::get('/google/callback', [LoginGoogleController::class, 'loginGoogleCallback']);
+
+// Client
+Route::group(['prefix' => 'movieClient'], function () {
+    Route::get('list-showing-movies', [MovieController::class, 'listShowingMovies']);
+    Route::get('list-upcoming-movie', [MovieController::class, 'listUpcomingMovies']);
+});
