@@ -41,7 +41,6 @@ Route::middleware('auth:api')->group(function () {
         Route::post('resetPassword', [AuthController::class, 'resetPassword'])->withoutMiddleware('auth:api');
         Route::get('verify-email', [AuthController::class, 'verifyEmail'])->name('verify_email')->withoutMiddleware('auth:api');
         Route::post('/resend-activation-email', [AuthController::class, 'resendActivationEmail'])->name('resendActivationEmail')->withoutMiddleware('auth:api');
-
     });
 
     Route::group(['prefix' => 'admin'], function () {
@@ -71,16 +70,16 @@ Route::middleware('auth:api')->group(function () {
             Route::get('show/{id}', [CategoriesController::class, 'showCategories'])->middleware('role:admin');
             Route::post('update/{id}', [CategoriesController::class, 'update'])->middleware('role:admin');
         });
-    });
 
-    // Route::group(['prefix' => 'movie'], function () {
-    //     Route::post('', [MovieController::class, 'addMovie'])->name('add_movie');
-    //     Route::get('{slug}', [MovieController::class, 'showMovie'])->name('get_movie_detail');
-    //     Route::get('', [MovieController::class, 'getListMovies'])->name('get_list_movie');
-    //     Route::put('{id}', [MovieController::class, 'updateMovie'])->name('update_movie');
-    //     Route::delete('{id}', [MovieController::class, 'deleteMovie'])->name('delete_movie');
-    //     Route::get('change-status/{id}', [MovieController::class, 'changeStatusMovie'])->name('hide_movie');
-    // });
+        Route::group(['prefix' => 'movies'], function () {
+            Route::post('', [MovieController::class, 'addMovie'])->name('add_movie');
+            Route::get('{slug}', [MovieController::class, 'showMovie'])->name('get_movie_detail');
+            Route::get('', [MovieController::class, 'getListMovies'])->name('get_list_movie');
+            Route::put('{id}', [MovieController::class, 'updateMovie'])->name('update_movie');
+            Route::delete('{id}', [MovieController::class, 'deleteMovie'])->name('delete_movie');
+            Route::get('change-status/{id}', [MovieController::class, 'changeStatusMovie'])->name('hide_movie');
+        });
+    });
 
     Route::group(['prefix' => 'showtime'], function () {
         Route::get('dates/{movie_id}', [ShowtimeController::class, 'getShowDate'])->name('get_show_date');
@@ -107,4 +106,5 @@ Route::get('/google/callback', [LoginGoogleController::class, 'loginGoogleCallba
 Route::group(['prefix' => 'movies'], function () {
     Route::get('list-showing-movies', [MovieController::class, 'listShowingMovies']);
     Route::get('list-upcoming-movie', [MovieController::class, 'listUpcomingMovies']);
+    Route::get('{slug}', [MovieController::class, 'showMovieClient'])->name('get_movie_detail_client');
 });

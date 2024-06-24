@@ -18,7 +18,24 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
     }
 
     /**
-     * show showtime by slug
+     * show movie by slug (for Client)
+     *
+     * @param  int $slug
+     * @return Resource
+     */
+    public function getMovieClient($slug)
+    {
+        $showtime = $this->model
+            ->select('movies.*')
+            ->where('slug', $slug)
+            ->groupBy('movies.id')
+            ->first();
+
+        return $showtime;
+    }
+
+    /**
+     * show movie by slug
      *
      * @param  int $slug
      * @return Resource
@@ -26,8 +43,14 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
     public function getMovie($slug)
     {
         $showtime = $this->model
+            ->leftJoin('showtimes', 'movies.id', '=', 'showtimes.movie_id')
+            ->leftJoin('orders', function ($join) {
+                $join->on('showtimes.id', '=', 'orders.showtime_id')
+                    ->where('orders.status', true);
+            })
+            ->select('movies.*', DB::raw('COUNT(orders.id) as total_orders'))
             ->where('slug', $slug)
-            ->where('status', MovieStatus::SHOW)
+            ->groupBy('movies.id')
             ->first();
 
         return $showtime;
