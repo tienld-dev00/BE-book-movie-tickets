@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api\Movie;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Movie\MovieRequest;
 use App\Http\Resources\MovieCollection;
 use App\Http\Resources\MovieResource;
 use App\Http\Resources\PaginationCollectionTrait;
 use App\Services\Movie\ChangeStatusMovieService;
+use App\Services\Movie\ClientGetMoviesService;
+use App\Services\Movie\ClientShowMovieService;
 use App\Services\Movie\CreateMovieService;
 use App\Services\Movie\DeleteMovieService;
 use App\Services\Movie\GetMoviesService;
@@ -26,7 +29,7 @@ class MovieController extends Controller
      * @param  int $slug
      * @return Response
      */
-    public function showMovie($slug)
+    public function showMovieClient($slug)
     {
         $result = resolve(ClientShowMovieService::class)->setParams($slug)->handle();
 
@@ -41,14 +44,34 @@ class MovieController extends Controller
     }
 
     /**
-     * get list movies
+     * admin show movie by id 
+     *
+     * @param  int $slug
+     * @return Response
+     */
+    public function showMovie($slug)
+    {
+        $result = resolve(ShowMovieService::class)->setParams($slug)->handle();
+
+        if (!$result) {
+            return $this->responseErrors(__('messages.error'));
+        }
+
+        return $this->responseSuccess([
+            'message' => __('messages.success'),
+            'data' => new MovieResource($result),
+        ]);
+    }
+
+    /**
+     * admin get list movies
      *
      * @param  int $slug
      * @return Response
      */
     public function getListMovies(Request $request)
     {
-        $result = resolve(ClientGetMoviesService::class)->setParams($request)->handle();
+        $result = resolve(GetMoviesService::class)->setParams($request)->handle();
 
         if (!$result) {
             return $this->responseErrors(__('messages.error'));

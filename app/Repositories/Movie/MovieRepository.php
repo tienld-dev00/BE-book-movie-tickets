@@ -18,7 +18,24 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
     }
 
     /**
-     * show showtime by slug
+     * show movie by slug (for Client)
+     *
+     * @param  int $slug
+     * @return Resource
+     */
+    public function getMovieClient($slug)
+    {
+        $showtime = $this->model
+            ->select('movies.*')
+            ->where('slug', $slug)
+            ->groupBy('movies.id')
+            ->first();
+
+        return $showtime;
+    }
+
+    /**
+     * show movie by slug
      *
      * @param  int $slug
      * @return Resource

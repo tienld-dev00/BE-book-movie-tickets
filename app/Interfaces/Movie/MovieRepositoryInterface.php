@@ -37,4 +37,13 @@ interface MovieRepositoryInterface extends CrudRepositoryInterface
      * @return ResourceCollection
      */
     public function listUpcomingMovies();
+
+
+    /**
+     * show movie by slug (for Client)
+     *
+     * @param  int $slug
+     * @return Resource
+     */
+    public function getMovieClient($slug);
 }
