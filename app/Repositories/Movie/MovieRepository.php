@@ -18,7 +18,7 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
     }
 
     /**
-     * show showtime by slug (for Admin)
+     * show showtime by slug
      *
      * @param  int $slug
      * @return Resource
@@ -40,7 +40,7 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
     }
 
     /**
-     * get list movies (for Admin) 
+     * get list movies
      *
      * @param  array $data
      * @return ResourceCollection
@@ -78,48 +78,41 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
     }
 
     /**
-     * show showtime by slug (for Client)
-     *
-     * @param  int $slug
-     * @return Resource
-     */
-    public function getMovieClient($slug)
-    {
-        $showtime = $this->model
-            ->select('movies.*')
-            ->where('slug', $slug)
-            ->groupBy('movies.id')
-            ->first();
-
-        return $showtime;
-    }
-
-    /**
-     * get list movies (for Client) 
+     * Get the list of currently showing movies
      *
      * @param  array $data
      * @return ResourceCollection
      */
-    public function getListMoviesClient($data)
+    public function listShowingMovies()
     {
-        $perPage = $data['per_page'];
-        $keyWord = $data['key_word'] ?? null;
-        $sortField = $data['sort_field'];
-        $sortDirection = $data['sort_direction'];
+        $currentDate = now();
+        $endDate = now()->addDays(7);
 
-        $query = $this->model
-            ->select('movies.*')
-            ->where('movies.status', MovieStatus::SHOW)
-            ->groupBy('movies.id');
+        // Get movies that have showtimes within the next 7 days
+        $movies = $this->model->whereHas('Showtime', function ($query) use ($currentDate, $endDate) {
+            $query->whereBetween('start_time', [$currentDate, $endDate]);
+        })->get();
 
-        if ($keyWord) {
-            $query->where(function ($query) use ($keyWord) {
-                $query->where('movies.name', 'LIKE', '%' . $keyWord . '%');
-            });
-        }
+        return $movies;
+    }
 
-        $query->orderBy($sortField, $sortDirection);
+    /**
+     * Get the list of upcoming movies
+     *
+     * @param  array $data
+     * @return ResourceCollection
+     */
+    public function listUpcomingMovies()
+    {
+        // Get the current date
+        $currentDate = now();
 
-        return $query->paginate($perPage);
+        // Get a list of upcoming movies (release date greater than current date)
+        $movies = $this->model
+            ->where('release_date', '>', $currentDate)
+            ->orderBy('release_date', 'asc')
+            ->get();
+
+        return $movies;
     }
 }

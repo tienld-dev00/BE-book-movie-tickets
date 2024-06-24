@@ -7,7 +7,7 @@ use App\Interfaces\CrudRepositoryInterface;
 interface MovieRepositoryInterface extends CrudRepositoryInterface
 {
     /**
-     * show showtime by slug (for admin) 
+     * show showtime by slug
      *
      * @param  int $slug
      * @return Resource
@@ -15,15 +15,7 @@ interface MovieRepositoryInterface extends CrudRepositoryInterface
     public function getMovie($slug);
 
     /**
-     * show showtime by slug (for client) 
-     *
-     * @param  int $slug
-     * @return Resource
-     */
-    public function getMovieClient($slug);
-
-    /**
-     * get list movies (for admin) 
+     * get list movies 
      *
      * @param  array $data
      * @return ResourceCollection
@@ -31,10 +23,18 @@ interface MovieRepositoryInterface extends CrudRepositoryInterface
     public function getListMovies($data);
 
     /**
-     * get list movies (for client)
+     * Get the list of currently showing movies
      *
      * @param  array $data
      * @return ResourceCollection
      */
-    public function getListMoviesClient($data);
+    public function listShowingMovies();
+
+    /**
+     * Get the list of upcoming movies
+     *
+     * @param  array $data
+     * @return ResourceCollection
+     */
+    public function listUpcomingMovies();
 }
