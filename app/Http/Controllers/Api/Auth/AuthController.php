@@ -142,7 +142,7 @@ class AuthController extends Controller
 
         return $this->responseSuccess([
             'user' => $user,
-            'role' => $responseData,
+            'role' => $user->role,
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,

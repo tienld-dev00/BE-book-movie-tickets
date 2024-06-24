@@ -32,5 +32,6 @@ return [
     'password_change_code' => 'Password change code has been sent. Please check your email.',
     'password_reset_email_sent' => 'The previous password change code has been sent and is still valid. Please check your email again.',
     'invalid_or_expired_code' => 'Invalid or expired code.',
-    'password_reset_limit_exceeded' => 'Password reset limit exceeded.'
+    'password_reset_limit_exceeded' => 'Password reset limit exceeded.',
+    'admin_fail_orders' => 'Admins are not allowed to book tickets.'
 ];

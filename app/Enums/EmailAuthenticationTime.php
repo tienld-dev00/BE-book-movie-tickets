@@ -6,5 +6,5 @@ use BenSampo\Enum\Enum;
 
 final class EmailAuthenticationTime extends Enum
 {
-    const TIME = 1;
+    const TIME = 5;
 }

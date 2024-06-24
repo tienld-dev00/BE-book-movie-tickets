@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Enums\UserRole;
 use Closure;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class RoleMiddleware
@@ -15,19 +16,17 @@ class RoleMiddleware
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next,  $role)
     {
-        // If user is 'admin', allow access
-        if ($request->user()->role === UserRole::ADMIN) {
+        $user = Auth::user();
+        // Check if the user has the required role
+        if ($user->role === UserRole::ADMIN && $role === 'admin') {
             return $next($request);
         }
 
-        // If user is 'user'
-        if ($request->user()->role === UserRole::USER) {
-            // If the user is trying to update their own information, allow access
-            if ($request->user()->id == $request->route('id')) {
-                return $next($request);
-            }
+        if ($user->role === UserRole::USER && $role === 'user') {
+            // Additional check for user role, if needed
+            return $next($request);
         }
 
         return response()->json([
