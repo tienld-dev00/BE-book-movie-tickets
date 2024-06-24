@@ -11,6 +11,8 @@ use App\Services\Movie\ChangeStatusMovieService;
 use App\Services\Movie\CreateMovieService;
 use App\Services\Movie\DeleteMovieService;
 use App\Services\Movie\GetMoviesService;
+use App\Services\Movie\GetShowingMoviesService;
+use App\Services\Movie\GetUpcomingMoviesService;
 use App\Services\Movie\HideMovieService;
 use App\Services\Movie\ShowMovieService;
 use App\Services\Movie\UpdateMovieService;
@@ -20,7 +22,7 @@ class MovieController extends Controller
 {
     use PaginationCollectionTrait;
     /**
-     * show movie by id 
+     * show movie by id
      *
      * @param  int $slug
      * @return Response
@@ -139,6 +141,47 @@ class MovieController extends Controller
 
         return $this->responseSuccess([
             'message' => __('messages.success'),
+        ]);
+    }
+
+
+    /**
+     * Get the list of currently showing movies
+     *
+     * @param  int $slug
+     * @return Response
+     */
+    public function listShowingMovies(Request $request)
+    {
+        $result = resolve(GetShowingMoviesService::class)->handle();
+
+        if (!$result) {
+            return $this->responseErrors(__('messages.error'));
+        }
+
+        return $this->responseSuccess([
+            'message' => __('messages.success'),
+            'data' =>  $result,
+        ]);
+    }
+
+    /**
+     * Get the list of upcoming movies
+     *
+     * @param  int $slug
+     * @return Response
+     */
+    public function listUpcomingMovies(Request $request)
+    {
+        $result = resolve(GetUpcomingMoviesService::class)->handle();
+
+        if (!$result) {
+            return $this->responseErrors(__('messages.error'));
+        }
+
+        return $this->responseSuccess([
+            'message' => __('messages.success'),
+            'data' =>  $result,
         ]);
     }
 }
