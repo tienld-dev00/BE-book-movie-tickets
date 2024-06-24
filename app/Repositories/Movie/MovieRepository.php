@@ -18,7 +18,7 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
     }
 
     /**
-     * show showtime by slug 
+     * show showtime by slug
      *
      * @param  int $slug
      * @return Resource
@@ -34,7 +34,7 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
     }
 
     /**
-     * get list movies 
+     * get list movies
      *
      * @param  array $data
      * @return ResourceCollection
@@ -69,5 +69,44 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
         $query->orderBy($sortField, $sortDirection);
 
         return $query->paginate($perPage);
+    }
+
+    /**
+     * Get the list of currently showing movies
+     *
+     * @param  array $data
+     * @return ResourceCollection
+     */
+    public function listShowingMovies()
+    {
+        $currentDate = now();
+        $endDate = now()->addDays(7);
+
+        // Get movies that have showtimes within the next 7 days
+        $movies = $this->model->whereHas('Showtime', function ($query) use ($currentDate, $endDate) {
+            $query->whereBetween('start_time', [$currentDate, $endDate]);
+        })->get();
+
+        return $movies;
+    }
+
+    /**
+     * Get the list of upcoming movies
+     *
+     * @param  array $data
+     * @return ResourceCollection
+     */
+    public function listUpcomingMovies()
+    {
+        // Get the current date
+        $currentDate = now();
+
+        // Get a list of upcoming movies (release date greater than current date)
+        $movies = $this->model
+            ->where('release_date', '>', $currentDate)
+            ->orderBy('release_date', 'asc')
+            ->get();
+
+        return $movies;
     }
 }
