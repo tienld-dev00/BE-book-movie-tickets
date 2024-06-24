@@ -20,12 +20,9 @@ class ShowtimeDetailResource extends JsonResource
             'end_time' => $this->end_time,
             'price' => $this->price,
             'movie' => $this->movie,
-            'room' => $this->room->name,
+            'room' => new RoomResource($this->room),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'seats' => $this->room->seat ?
-                SeatResource::collection($this->room->seat)
-                : [],
         ];
     }
 }
