@@ -28,6 +28,7 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
         $showtime = $this->model
             ->select('movies.*')
             ->where('slug', $slug)
+            ->where('status', MovieStatus::SHOW)
             ->groupBy('movies.id')
             ->first();
 
@@ -106,7 +107,7 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
         $endDate = now()->addDays(7);
 
         // Get movies that have showtimes within the next 7 days
-        $movies = $this->model->whereHas('Showtime', function ($query) use ($currentDate, $endDate) {
+        $movies = $this->model->where('status', MovieStatus::SHOW)->whereHas('Showtime', function ($query) use ($currentDate, $endDate) {
             $query->whereBetween('start_time', [$currentDate, $endDate]);
         })->get();
 
@@ -126,6 +127,7 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
 
         // Get a list of upcoming movies (release date greater than current date)
         $movies = $this->model
+            ->where('status', MovieStatus::SHOW)
             ->where('release_date', '>', $currentDate)
             ->orderBy('release_date', 'asc')
             ->get();

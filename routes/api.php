@@ -82,8 +82,8 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::group(['prefix' => 'showtime'], function () {
-        Route::get('dates/{movie_id}', [ShowtimeController::class, 'getShowDate'])->name('get_show_date');
-        Route::get('/', [ShowtimeController::class, 'getShowtimesByDate'])->name('get_showtimes_by_date');
+        Route::get('dates/{movie_id}', [ShowtimeController::class, 'getShowDate'])->name('get_show_date')->withoutMiddleware('auth:api');
+        Route::get('/', [ShowtimeController::class, 'getShowtimesByDate'])->name('get_showtimes_by_date')->withoutMiddleware('auth:api');
         Route::get('{showtime_id}', [ShowtimeController::class, 'showShowtime'])->name('get_showtime');
     });
 
