@@ -7,7 +7,8 @@ use App\Http\Controllers\Api\Payment\PaymentController;
 use App\Http\Controllers\Api\Webhook\StripeWebhookController;
 use App\Http\Controllers\Api\Admin\Order\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Categories\CategoriesController;
-use App\Http\Controllers\Api\Movie\MovieController;
+use App\Http\Controllers\Api\Admin\Movie\MovieController;
+use App\Http\Controllers\Api\Movie\MovieController as MovieControllerClient;
 use App\Http\Controllers\Api\Showtime\ShowtimeController;
 use App\Http\Controllers\Api\User\LoginGoogleController;
 use App\Http\Controllers\Api\User\UserController;
@@ -69,15 +70,19 @@ Route::middleware('auth:api')->group(function () {
             Route::get('show/{id}', [CategoriesController::class, 'showCategories'])->middleware('role:admin');
             Route::post('update/{id}', [CategoriesController::class, 'update'])->middleware('role:admin');
         });
-    });
 
+        Route::group(['prefix' => 'movie'], function () {
+            Route::get('{slug}', [MovieController::class, 'showMovie'])->name('get_movie_detail');
+            Route::get('', [MovieController::class, 'getListMovies'])->name('get_list_movie');
+            Route::put('{id}', [MovieController::class, 'updateMovie'])->name('update_movie');
+            Route::delete('{id}', [MovieController::class, 'deleteMovie'])->name('delete_movie');
+            Route::post('', [MovieController::class, 'addMovie'])->name('add_movie');
+            Route::get('change-status/{id}', [MovieController::class, 'changeStatusMovie'])->name('hide_movie');
+        });
+    });
     Route::group(['prefix' => 'movie'], function () {
-        Route::post('', [MovieController::class, 'addMovie'])->name('add_movie');
-        Route::get('{slug}', [MovieController::class, 'showMovie'])->name('get_movie_detail');
-        Route::get('', [MovieController::class, 'getListMovies'])->name('get_list_movie');
-        Route::put('{id}', [MovieController::class, 'updateMovie'])->name('update_movie');
-        Route::delete('{id}', [MovieController::class, 'deleteMovie'])->name('delete_movie');
-        Route::get('change-status/{id}', [MovieController::class, 'changeStatusMovie'])->name('hide_movie');
+        Route::get('{slug}', [MovieControllerClient::class, 'showMovie'])->name('get_movie_detail_client');
+        Route::get('', [MovieControllerClient::class, 'getListMovies'])->name('get_list_movie_client');
     });
 
     Route::group(['prefix' => 'showtime'], function () {
