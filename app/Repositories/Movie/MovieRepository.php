@@ -18,7 +18,25 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
     }
 
     /**
-     * show showtime by slug
+     * show movie by slug (for Client)
+     *
+     * @param  int $slug
+     * @return Resource
+     */
+    public function getMovieClient($slug)
+    {
+        $showtime = $this->model
+            ->select('movies.*')
+            ->where('slug', $slug)
+            ->where('status', MovieStatus::SHOW)
+            ->groupBy('movies.id')
+            ->first();
+
+        return $showtime;
+    }
+
+    /**
+     * show movie by slug
      *
      * @param  int $slug
      * @return Resource
@@ -26,8 +44,14 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
     public function getMovie($slug)
     {
         $showtime = $this->model
+            ->leftJoin('showtimes', 'movies.id', '=', 'showtimes.movie_id')
+            ->leftJoin('orders', function ($join) {
+                $join->on('showtimes.id', '=', 'orders.showtime_id')
+                    ->where('orders.status', true);
+            })
+            ->select('movies.*', DB::raw('COUNT(orders.id) as total_orders'))
             ->where('slug', $slug)
-            ->where('status', MovieStatus::SHOW)
+            ->groupBy('movies.id')
             ->first();
 
         return $showtime;
@@ -83,7 +107,7 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
         $endDate = now()->addDays(7);
 
         // Get movies that have showtimes within the next 7 days
-        $movies = $this->model->whereHas('Showtime', function ($query) use ($currentDate, $endDate) {
+        $movies = $this->model->where('status', MovieStatus::SHOW)->whereHas('Showtime', function ($query) use ($currentDate, $endDate) {
             $query->whereBetween('start_time', [$currentDate, $endDate]);
         })->get();
 
@@ -103,6 +127,7 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
 
         // Get a list of upcoming movies (release date greater than current date)
         $movies = $this->model
+            ->where('status', MovieStatus::SHOW)
             ->where('release_date', '>', $currentDate)
             ->orderBy('release_date', 'asc')
             ->get();
