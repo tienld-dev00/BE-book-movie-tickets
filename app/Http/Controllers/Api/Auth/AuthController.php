@@ -115,7 +115,7 @@ class AuthController extends Controller
             if ($user->role == UserRole::USER && is_null($user->email_verified_at)) {
                 return $this->responseErrors(
                     __('auth.email_not_verified'),
-                    Response::HTTP_UNAUTHORIZED
+                    Response::HTTP_CONFLICT
                 );
             }
         }
