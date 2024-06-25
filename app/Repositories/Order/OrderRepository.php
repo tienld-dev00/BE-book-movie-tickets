@@ -2,9 +2,11 @@
 
 namespace App\Repositories\Order;
 
+use App\Enums\OrderStatus;
 use App\Interfaces\Order\OrderRepositoryInterface;
 use App\Models\Order;
 use App\Repositories\BaseRepository;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
 class OrderRepository extends BaseRepository implements OrderRepositoryInterface
@@ -88,5 +90,24 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
     public function updateOrCreate(array $checkData, array $updateData)
     {
         return $this->model->updateOrCreate($checkData, $updateData);
+    }
+
+    /**
+     * list order have showtime in 30min later
+     *
+     * @return Array
+     */
+    public function orderHaveShowtimes30min()
+    {
+        $currentTime = Carbon::now();
+        $addtime = $currentTime->addMinutes(30);
+        $addtimeYMDHM = $addtime->format('Y-m-d H:i');
+
+        return $this->model->select('orders.*')
+            ->leftJoin('showtimes', 'showtimes.id', '=', 'orders.showtime_id')
+            ->where('orders.status', OrderStatus::PAYMENT_SUCCEEDED)
+            ->whereRaw("DATE_FORMAT(showtimes.start_time, '%Y-%m-%d %H:%i') = ?", [$addtimeYMDHM])
+            ->groupBy('orders.id')
+            ->get();
     }
 }
