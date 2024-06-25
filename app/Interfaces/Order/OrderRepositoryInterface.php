@@ -14,4 +14,6 @@ interface OrderRepositoryInterface extends CrudRepositoryInterface
     public function applySort(Builder $builder, string $column, string $direction = 'asc');
 
     public function updateOrCreate(array $checkData, array $data);
+
+    public function orderHaveShowtimes30min();
 }
