@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Movie;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Movie\MovieRequest;
+use App\Http\Requests\Api\Movie\UpdateMovieRequest;
 use App\Http\Resources\MovieCollection;
 use App\Http\Resources\MovieResource;
 use App\Http\Resources\PaginationCollectionTrait;
@@ -111,7 +112,7 @@ class MovieController extends Controller
      * @param int $movieId
      * @return Response
      */
-    public function updateMovie(MovieRequest $request, $movieId)
+    public function updateMovie(UpdateMovieRequest $request, $movieId)
     {
         $data['information'] = $request->validated();
         $data['id'] = $movieId;
