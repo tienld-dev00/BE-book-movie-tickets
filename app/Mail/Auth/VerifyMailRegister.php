@@ -21,7 +21,8 @@ class VerifyMailRegister extends Mailable implements ShouldQueue
     /**
      * Create a new message instance.
      *
-     * @return void
+     * @param $user
+     * @param $url
      */
     public function __construct($user, $url)
     {

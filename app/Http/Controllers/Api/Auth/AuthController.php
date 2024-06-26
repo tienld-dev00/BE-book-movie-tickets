@@ -22,9 +22,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Auth\VerifyMailRegister;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -263,16 +264,31 @@ class AuthController extends Controller
 
             // Get the expiration time from the request
             $expires = $request->query('expires');
+            $signature = $request->query('signature');
 
             // Check if the verification link has expired
-            if (now()->timestamp > $expires) {
+            if (Carbon::now()->timestamp > $expires) {
                 return $this->responseErrors([
                     'success' => false,
                     'message' => 'Email verification link has expired'
-                ]);
+                ], 409);
             }
 
-            $user->email_verified_at = now();
+            // Giải mã và xác minh token JWT
+            try {
+                $token = JWTAuth::setToken($signature);
+                $payload = JWTAuth::getPayload($token);
+
+                // Bạn có thể kiểm tra chuỗi ngẫu nhiên ở đây nếu cần thiết
+                $randomString = $payload['random'];
+            } catch (JWTException $e) {
+                return $this->responseErrors([
+                    'success' => false,
+                    'message' => 'Invalid signature'
+                ], 401);
+            }
+
+            $user->email_verified_at = Carbon::now();
             $user->update();
 
             return $this->responseSuccess([
