@@ -108,4 +108,12 @@ return [
 
     'password_timeout' => 10800,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Authentication code and password change code expire
+    |--------------------------------------------------------------------------
+    */
+
+    'email_authentication_time' => env('EMAIL_AUTHENTICATION_TIME'),
+
 ];

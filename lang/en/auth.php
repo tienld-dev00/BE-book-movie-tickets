@@ -31,7 +31,7 @@ return [
     'verification_email_resent' => 'The email verification link has expired. A new verification email has been sent.',
     'password_change_code' => 'Password change code has been sent. Please check your email.',
     'password_reset_email_sent' => 'The previous password change code has been sent and is still valid. Please check your email again.',
-    'invalid_or_expired_code' => 'Invalid or expired code.',
+    'invalid_or_expired_code' => 'Code has expired.',
     'password_reset_limit_exceeded' => 'Password reset limit exceeded.',
     'admin_fail_orders' => 'Admins are not allowed to book tickets.'
 ];
