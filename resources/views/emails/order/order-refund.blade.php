@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Order Success</title>
+    <title>Order Refund</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -60,12 +60,13 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Order Success</h1>
-            <p>Thank you for your purchase, {{ $order->user->name }}!</p>
+            <h1>Order Refund</h1>
+            <p>Dear {{ $order->user->name }},</p>
+            <p>We regret to inform you that your order has been refunded.</p>
         </div>
 
         <div class="details">
-            <h2>Order Details</h2>
+            <h2>Refund Details</h2>
             <table>
                 <tr>
                     <th>Order ID</th>
@@ -76,7 +77,7 @@
                     <td>{{ $order->payments[0]->payment_intent_id }}</td>
                 </tr>
                 <tr>
-                    <th>Amount</th>
+                    <th>Refund Amount</th>
                     <td>${{ number_format($order->getAmount(), 2) }}</td>
                 </tr>
                 <tr>
@@ -115,8 +116,8 @@
         </div>
 
         <div class="footer">
-            <p>If you have any questions, feel free to contact us at support@example.com.</p>
-            <p>Thank you for choosing our service!</p>
+            <p>If you have any questions or need further assistance, please contact us at support@example.com.</p>
+            <p>Thank you for understanding.</p>
         </div>
     </div>
 </body>

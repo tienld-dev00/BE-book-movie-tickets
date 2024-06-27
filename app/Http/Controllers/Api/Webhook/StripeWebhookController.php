@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Webhook;
 
 use App\Enums\PaymentMethod;
+use App\Jobs\SendEmail\Order\SendMailOrderRefundJob;
 use App\Jobs\SendEmail\Order\SendMailOrderSuccessJob;
 use App\Services\Firebase\FirestoreService;
 use App\Services\Order\UpdateOrCreateOrderService;
@@ -93,8 +94,6 @@ class StripeWebhookController extends Controller
             }
         }
 
-        SendMailOrderSuccessJob::dispatch($order);
-
         /** Update seats's status in firestore to true - seat have been ordered */
         $firestore = FirestoreService::connect();
         $collectionReference = $firestore->collection('seats');
@@ -124,6 +123,8 @@ class StripeWebhookController extends Controller
         if (!$payment) {
             return $this->responseErrors('Error when save payment result.');
         }
+
+        SendMailOrderSuccessJob::dispatch($order);
 
         return $this->responseSuccess(['message' => 'success']);
     }
@@ -202,6 +203,8 @@ class StripeWebhookController extends Controller
         if (!$order) {
             return $this->responseErrors('Error when update order');
         }
+
+        SendMailOrderRefundJob::dispatch($order);
 
         /** Delete seats in firestore  */
         $firestore = FirestoreService::connect();

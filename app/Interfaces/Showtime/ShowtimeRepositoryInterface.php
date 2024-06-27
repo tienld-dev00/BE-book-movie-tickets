@@ -29,4 +29,13 @@ interface ShowtimeRepositoryInterface extends CrudRepositoryInterface
      * @return Resource
      */
     public function getShowtime($showtime_id);
+
+    /**
+     * Get list showtime by query condition
+     * 
+     * @param array $data
+     * 
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function getShowtimeByQuery(array $data);
 }
