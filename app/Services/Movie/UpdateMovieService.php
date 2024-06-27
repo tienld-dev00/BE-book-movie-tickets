@@ -25,34 +25,39 @@ class UpdateMovieService extends BaseService
 
             if ($thisMovie) {
                 $oldUrl = $thisMovie->image;
+                if (isset($this->data['information']['image'])) {
+                    if (file_exists($this->data['information']['image'])) {
+                        $file = $this->data['information']['image'];
+                        $fileName = time() . '_' . $file->getClientOriginalName();
+                        $directory = 'images/movie';
 
-                if (file_exists($this->data['information']['image'])) {
-                    $file = $this->data['information']['image'];
-                    $fileName = time() . '_' . $file->getClientOriginalName();
-                    $directory = 'images/movie';
+                        $path = Storage::put(
+                            $directory,
+                            $file,
+                            $fileName,
+                            ['visibility' => 'public']
+                        );
 
-                    $path = Storage::put(
-                        $directory,
-                        $file,
-                        $fileName,
-                        ['visibility' => 'public']
-                    );
+                        $url = Storage::url($path);
+                        $this->data['information']['image'] = $url;
 
-                    $url = Storage::url($path);
-                    $this->data['information']['image'] = $url;
+                        $updatedMovie = $this->movieRepository->update($this->data['information'], $this->data['id']);
 
-                    $updatedMovie = $this->movieRepository->update($this->data['information'], $this->data['id']);
+                        if ($updatedMovie) {
+                            $baseUrl = urldecode(parse_url($oldUrl)['path']);
 
-                    if ($updatedMovie) {
-                        $baseUrl = urldecode(parse_url($oldUrl)['path']);
-
-                        if (Storage::exists($baseUrl)) {
-                            Storage::delete($baseUrl);
+                            if (Storage::exists($baseUrl)) {
+                                Storage::delete($baseUrl);
+                            }
                         }
                     }
+                } else {
+                    $this->data['information']['image'] = $oldUrl;
 
-                    return $updatedMovie;
+                    $updatedMovie = $this->movieRepository->update($this->data['information'], $this->data['id']);
                 }
+
+                return $updatedMovie;
             }
         } catch (S3Exception $e) {
             Log::error('S3 error: ' . $e->getAwsErrorMessage());
