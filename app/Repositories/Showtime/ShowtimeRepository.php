@@ -73,4 +73,32 @@ class ShowtimeRepository extends BaseRepository implements ShowtimeRepositoryInt
 
         return $showtime;
     }
+
+    /**
+     * Get showtime by query condition
+     * 
+     * @param array $data
+     * 
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function getShowtimeByQuery(array $data)
+    {
+        $builder = $this->model->query();
+
+        /** Get showtime in month */
+        if (isset($data['months']) && isset($data['years'])) {
+            $builder->where(function ($query) use ($data) {
+                foreach ($data['years'] as $year) {
+                    $query->orWhereYear('start_time', $year)
+                        ->where(function ($query) use ($data) {
+                            foreach ($data['months'] as $month) {
+                                $query->orWhereMonth('start_time', $month);
+                            }
+                        });
+                }
+            });
+        }
+
+        return $builder;
+    }
 }
