@@ -15,18 +15,18 @@ class ForgotPassword extends Mailable
 
     protected $user;
 
-    protected $verificationCode;
+    protected $url;
 
     /**
      * Create a new message instance.
      *
      * @param $user
-     * @param $verificationCode
+     * @param $url
      */
-    public function __construct($user, $verificationCode)
+    public function __construct($user, $url)
     {
         $this->user = $user;
-        $this->verificationCode = $verificationCode;
+        $this->url = $url;
     }
 
     /**
@@ -51,7 +51,7 @@ class ForgotPassword extends Mailable
         return new Content(
             view: 'emails.ForgotPassword.forgot_password',
             with: [
-                'verificationCode' => $this->verificationCode,
+                'url' => $this->url,
                 'user' => $this->user,
             ],
         );

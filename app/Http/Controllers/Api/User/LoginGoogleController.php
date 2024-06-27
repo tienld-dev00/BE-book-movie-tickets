@@ -46,6 +46,12 @@ class LoginGoogleController extends Controller
             $user = User::where('email', $googleUser->email)->first();
             if ($user) {
 
+                if ($user->status == 1) {
+                    return $this->responseErrors([
+                        'message' => __('auth.your_account_is_locked'),
+                    ], Response::HTTP_CONFLICT);
+                }
+
                 $token = auth()->login($user);
 
                 $user->update(['google_id' => $googleUser->id]);

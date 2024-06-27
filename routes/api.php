@@ -93,7 +93,7 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::group(['prefix' => 'stripe'], function () {
-        Route::post('process-payment', [PaymentController::class, 'processStripePayment']);
+        Route::post('process-payment', [PaymentController::class, 'processStripePayment'])->middleware('role:user');
         Route::post('handle-webhook', [StripeWebhookController::class, 'handleStripeWebhook'])->withoutMiddleware('auth:api');
     });
 });
