@@ -32,7 +32,7 @@ class CreateMovieService extends BaseService
                     'images/movie',
                     $file,
                     $fileName,
-                    ['visibility' => 'public']
+                    'public'
                 );
 
                 $url = Storage::url($path);

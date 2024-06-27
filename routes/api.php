@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\Room\RoomController as AdminRoomController;
+use App\Http\Controllers\Api\Admin\Showtime\ShowtimeController as AdminShowtimeController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Order\OrderController;
 use App\Http\Controllers\Api\Payment\PaymentController;
@@ -55,6 +56,14 @@ Route::middleware('auth:api')->group(function () {
             Route::post('', [AdminRoomController::class, 'store']);
             Route::put('{room_id}', [AdminRoomController::class, 'update']);
             Route::delete('{room_id}', [AdminRoomController::class, 'delete']);
+        });
+
+        Route::group(['prefix' => 'showtimes'], function () {
+            Route::get('', [AdminShowtimeController::class, 'index']);
+            Route::get('{showtime}', [AdminShowtimeController::class, 'show']);
+            Route::post('', [AdminShowtimeController::class, 'store']);
+            Route::put('{showtimeId}', [AdminShowtimeController::class, 'update']);
+            Route::delete('{showtimeId}', [AdminShowtimeController::class, 'delete']);
         });
 
         Route::group(['prefix' => 'users'], function () {
